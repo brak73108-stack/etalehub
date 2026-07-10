@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Knowledge Base — EtaleHub</title>
+  <meta name="description" content="Search the EtaleHub knowledge base for tutorials, command references, and billing settings guides.">
+  <meta name="author" content="EtaleHub">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%233B82F6'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold' font-size='16'>E</text></svg>">
+</head>
+<body>
+  <!-- ========== Navigation ========== -->
+  <nav class="nav" id="main-nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">E</div>
+        EtaleHub
+      </a>
+
+      <div class="nav__menu" id="nav-menu">
+        <div class="nav__dropdown">
+          <a href="product.html" class="nav__link">Product <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-left:4px"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="nav__dropdown-menu">
+            <a href="ai-office-manager.html" class="nav__dropdown-item">AI Office Manager</a>
+            <a href="features.html" class="nav__dropdown-item">All Features</a>
+            <a href="https://app.etalehub.com#/dashboard" class="nav__dropdown-item">Try AI Demo</a>
+          </div>
+        </div>
+        <a href="pricing.html" class="nav__link">Pricing</a>
+        <a href="plumbing-heating.html" class="nav__link">Plumbing & Heating</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="contact.html" class="nav__link">Contact</a>
+      </div>
+
+      <div class="nav__cta hide-below-desktop">
+        <a href="https://app.etalehub.com" class="btn btn-ghost">Log in</a>
+        <a href="early-access.html" class="btn btn-primary btn-sm">Join Early Access</a>
+      </div>
+
+      <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span class="nav__toggle-bar"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== Page Header ========== -->
+  <header class="page-header bg-grid" style="padding-top: calc(72px + var(--space-12)); padding-bottom: var(--space-8);">
+    <div class="container">
+      <span class="badge badge--blue" style="margin-bottom: var(--space-3)">Documentation</span>
+      <h1>How can we help?</h1>
+      <p style="max-width: 600px; margin: 0 auto 24px; color: var(--text-secondary);">
+        Search documentation or browse guides below to get started with EtaleHub.
+      </p>
+      <div style="max-width: 480px; margin: 0 auto;">
+        <input type="text" class="form-input" placeholder="Search keywords (e.g. 'Stripe integration', 'reminders')...">
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== Help Categories Grid ========== -->
+  <main class="section-sm" style="padding-bottom: var(--space-20);">
+    <div class="container">
+      <div class="grid-3 reveal-stagger">
+        <!-- Cat 1 -->
+        <a href="#" class="card-elevated" style="text-decoration:none;">
+          <div style="font-size: 32px; margin-bottom: 12px;">🚀</div>
+          <h3 style="font-size: 18px; margin-bottom: 8px;">Getting Started</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Learn how to set up your profile, enter default services, and configure invoice terms.</p>
+        </a>
+
+        <!-- Cat 2 -->
+        <a href="#" class="card-elevated" style="text-decoration:none;">
+          <div style="font-size: 32px; margin-bottom: 12px;">💬</div>
+          <h3 style="font-size: 18px; margin-bottom: 8px;">AI Commands Guide</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Reference list of common formatting loops, invoice terms, and customer record requests.</p>
+        </a>
+
+        <!-- Cat 3 -->
+        <a href="#" class="card-elevated" style="text-decoration:none;">
+          <div style="font-size: 32px; margin-bottom: 12px;">🧾</div>
+          <h3 style="font-size: 18px; margin-bottom: 8px;">Invoicing & Billing</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Setting up card payments via Stripe, drafting quotes, and chasing late accounts.</p>
+        </a>
+
+        <!-- Cat 4 -->
+        <a href="#" class="card-elevated" style="text-decoration:none;">
+          <div style="font-size: 32px; margin-bottom: 12px;">👥</div>
+          <h3 style="font-size: 18px; margin-bottom: 8px;">Customer Management</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Importing client CSV databases, resolving property notes, and editing timelines.</p>
+        </a>
+
+        <!-- Cat 5 -->
+        <a href="#" class="card-elevated" style="text-decoration:none;">
+          <div style="font-size: 32px; margin-bottom: 12px;">📅</div>
+          <h3 style="font-size: 18px; margin-bottom: 8px;">Reminders & Alerts</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Configuring boiler rebooking campaigns, follow-up messages, and SMS templates.</p>
+        </a>
+
+        <!-- Cat 6 -->
+        <a href="#" class="card-elevated" style="text-decoration:none;">
+          <div style="font-size: 32px; margin-bottom: 12px;">💳</div>
+          <h3 style="font-size: 18px; margin-bottom: 8px;">Account Settings</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">Managing subscriptions, team member roles, and security details.</p>
+        </a>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========== Footer ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="index.html" class="footer__logo">
+            <div class="nav__logo-icon">E</div>
+            EtaleHub
+          </a>
+          <p class="footer__desc">The AI office manager for plumbing and heating businesses. Spend less time on paperwork. Spend more time earning.</p>
+          <div class="footer__social">
+            <a href="#" class="footer__social-link" aria-label="Twitter">𝕏</a>
+            <a href="#" class="footer__social-link" aria-label="LinkedIn">in</a>
+            <a href="#" class="footer__social-link" aria-label="Facebook">f</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Product</h4>
+          <div class="footer__links">
+            <a href="product.html" class="footer__link">Product Overview</a>
+            <a href="ai-office-manager.html" class="footer__link">AI Office Manager</a>
+            <a href="features.html" class="footer__link">Features</a>
+            <a href="pricing.html" class="footer__link">Pricing</a>
+            <a href="https://app.etalehub.com#/dashboard" class="footer__link">AI Demo</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Industries</h4>
+          <div class="footer__links">
+            <a href="plumbing-heating.html" class="footer__link">Plumbing & Heating</a>
+            <a href="seo/ai-software-plumbers.html" class="footer__link">AI for Plumbers</a>
+            <a href="seo/plumbing-invoice-software.html" class="footer__link">Invoice Software</a>
+            <a href="seo/plumbing-quote-software.html" class="footer__link">Quote Software</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Company</h4>
+          <div class="footer__links">
+            <a href="about.html" class="footer__link">About</a>
+            <a href="contact.html" class="footer__link">Contact</a>
+            <a href="blog.html" class="footer__link">Blog</a>
+            <a href="knowledge-base.html" class="footer__link">Knowledge Base</a>
+            <a href="early-access.html" class="footer__link">Early Access</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <span>© 2025 EtaleHub Ltd. All rights reserved.</span>
+        <div class="footer__bottom-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+</body>
+</html>

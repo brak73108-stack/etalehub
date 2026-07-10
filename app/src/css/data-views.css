@@ -1,0 +1,999 @@
+/* ============================================================
+   EtaleHub — Data Views
+   Jobs · Customers · Money · Calendar · Settings
+   ============================================================ */
+
+/* ============================================================
+   1. VIEW HEADER
+   ============================================================ */
+.view-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.view-header__left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.view-header__title {
+  font-family: var(--font-heading);
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.view-header__count {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  padding: 2px 8px;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-full);
+}
+
+.view-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* ============================================================
+   2. TAB NAVIGATION
+   ============================================================ */
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border-bottom: 1px solid var(--border-primary);
+  margin-bottom: var(--space-lg);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  cursor: pointer;
+  transition: color var(--transition-fast),
+              border-color var(--transition-fast);
+}
+.tab:hover {
+  color: var(--text-secondary);
+}
+.tab.is-active {
+  color: var(--text-primary);
+  border-bottom-color: var(--accent-blue);
+}
+
+.tab__badge {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+  background: var(--bg-elevated);
+  color: var(--text-muted);
+}
+.tab.is-active .tab__badge {
+  background: rgba(59, 130, 246, 0.14);
+  color: var(--accent-blue);
+}
+
+/* ============================================================
+   3. SEARCH / FILTER BAR
+   ============================================================ */
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+  flex-wrap: wrap;
+}
+
+.filter-bar__search {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: 8px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  transition: border-color var(--transition-fast);
+}
+.filter-bar__search:focus-within {
+  border-color: var(--border-focus);
+}
+
+.filter-bar__search-icon {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.filter-bar__search-input {
+  flex: 1;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 13px;
+}
+
+.filter-bar__select {
+  padding: 8px 32px 8px 12px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  font-size: 13px;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' fill='%2364748B' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.4 2.3 5.7l1.4-1.4L8 8.6l4.3-4.3 1.4 1.4z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  cursor: pointer;
+  transition: border-color var(--transition-fast);
+}
+.filter-bar__select:focus {
+  border-color: var(--border-focus);
+}
+
+/* ============================================================
+   4. DATA TABLE
+   ============================================================ */
+.data-table-wrap {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table thead {
+  background: var(--bg-elevated);
+}
+
+.data-table th {
+  padding: var(--space-sm) var(--space-md);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border-primary);
+  user-select: none;
+}
+
+/* sortable arrows */
+.data-table th.is-sortable {
+  cursor: pointer;
+  transition: color var(--transition-fast);
+}
+.data-table th.is-sortable:hover {
+  color: var(--text-secondary);
+}
+.data-table th.is-sortable::after {
+  content: '⇅';
+  margin-left: 4px;
+  font-size: 10px;
+  opacity: 0.4;
+}
+.data-table th.is-sorted-asc::after  { content: '↑'; opacity: 1; color: var(--accent-blue); }
+.data-table th.is-sorted-desc::after { content: '↓'; opacity: 1; color: var(--accent-blue); }
+
+.data-table td {
+  padding: var(--space-sm) var(--space-md);
+  font-size: 13px;
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--border-primary);
+  vertical-align: middle;
+}
+
+/* striped rows */
+.data-table tbody tr:nth-child(even) {
+  background: rgba(26, 42, 74, 0.3);
+}
+
+.data-table tbody tr {
+  transition: background var(--transition-fast);
+}
+.data-table tbody tr:hover {
+  background: var(--bg-hover);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* mono values */
+.data-table .cell-mono {
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+
+/* clickable rows */
+.data-table tbody tr.is-clickable {
+  cursor: pointer;
+}
+
+/* ============================================================
+   5. RESPONSIVE TABLE → CARD LIST
+   ============================================================ */
+@media (max-width: 768px) {
+  .data-table-wrap {
+    background: transparent;
+    border: none;
+    border-radius: 0;
+  }
+
+  .data-table,
+  .data-table thead,
+  .data-table tbody,
+  .data-table th,
+  .data-table td,
+  .data-table tr {
+    display: block;
+  }
+
+  .data-table thead {
+    display: none;
+  }
+
+  .data-table tbody tr {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-primary);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-sm);
+    padding: var(--space-sm);
+  }
+
+  .data-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-xs) var(--space-sm);
+    border-bottom: 1px solid var(--border-primary);
+    font-size: 13px;
+  }
+
+  .data-table td:last-child {
+    border-bottom: none;
+  }
+
+  .data-table td::before {
+    content: attr(data-label);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-right: var(--space-sm);
+    flex-shrink: 0;
+  }
+}
+
+/* ============================================================
+   6. DETAIL VIEW — Two-Column Layout
+   ============================================================ */
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+.detail-main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.detail-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+/* section cards */
+.detail-section {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.detail-section__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.detail-section__header h4 { margin: 0; }
+
+.detail-section__body {
+  padding: var(--space-lg);
+}
+
+/* inline-edit styling */
+.inline-edit {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-xs) 0;
+}
+
+.inline-edit__value {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary);
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+.inline-edit__value:hover {
+  border-color: var(--border-primary);
+  background: var(--bg-primary);
+  cursor: text;
+}
+.inline-edit__value:focus {
+  border-color: var(--border-focus);
+  background: var(--bg-primary);
+  box-shadow: 0 0 0 2px rgba(59,130,246,0.12);
+  outline: none;
+}
+
+/* ============================================================
+   7. TIMELINE COMPONENT (Service History)
+   ============================================================ */
+.timeline {
+  position: relative;
+  padding-left: var(--space-xl);
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 11px;
+  width: 2px;
+  background: var(--border-primary);
+  border-radius: var(--radius-full);
+}
+
+.timeline__entry {
+  position: relative;
+  padding-bottom: var(--space-lg);
+}
+.timeline__entry:last-child { padding-bottom: 0; }
+
+.timeline__dot {
+  position: absolute;
+  left: calc(-1 * var(--space-xl) + 6px);
+  top: 4px;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+  background: var(--bg-elevated);
+  border: 2px solid var(--accent-blue);
+}
+.timeline__entry--completed .timeline__dot { border-color: var(--accent-green); }
+.timeline__entry--cancelled .timeline__dot { border-color: var(--accent-red); }
+
+.timeline__date {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.timeline__title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.timeline__desc {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* ============================================================
+   8. CUSTOMER PROFILE
+   ============================================================ */
+.customer-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.customer-header__avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--accent-blue), var(--accent-teal));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-family: var(--font-heading);
+  font-size: 20px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.customer-header__info h2 { margin-bottom: 2px; }
+
+.customer-header__meta {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* contact info grid */
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-md);
+}
+
+.contact-grid__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.contact-grid__label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.contact-grid__value {
+  font-size: 14px;
+  color: var(--text-primary);
+}
+.contact-grid__value a {
+  color: var(--accent-blue);
+}
+
+/* equipment tags */
+.equipment-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.equipment-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 4px 12px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-full);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ============================================================
+   9. CALENDAR VIEW
+   ============================================================ */
+.calendar {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.calendar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.calendar__title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.calendar__nav {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.calendar__nav-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.calendar__nav-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* day-of-week header */
+.calendar__weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.calendar__weekday {
+  padding: var(--space-sm);
+  text-align: center;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* month grid */
+.calendar__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar__day {
+  position: relative;
+  min-height: 72px;
+  padding: var(--space-sm);
+  border-right: 1px solid var(--border-primary);
+  border-bottom: 1px solid var(--border-primary);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+.calendar__day:nth-child(7n) { border-right: none; }
+
+.calendar__day:hover {
+  background: var(--bg-hover);
+}
+
+.calendar__day--outside {
+  opacity: 0.3;
+}
+
+.calendar__day--today {
+  background: rgba(59, 130, 246, 0.06);
+}
+
+.calendar__day--selected {
+  background: rgba(59, 130, 246, 0.12);
+  box-shadow: inset 0 0 0 1px var(--accent-blue);
+}
+
+.calendar__day-number {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-xs);
+}
+.calendar__day--today .calendar__day-number {
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+/* job dot indicators */
+.calendar__day-dots {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+
+.calendar__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+}
+.calendar__dot--job      { background: var(--accent-blue); }
+.calendar__dot--reminder { background: var(--accent-amber); }
+.calendar__dot--overdue  { background: var(--accent-red); }
+
+/* selected day job list */
+.calendar__day-detail {
+  padding: var(--space-lg);
+  border-top: 1px solid var(--border-primary);
+}
+
+.calendar__day-detail h4 {
+  margin-bottom: var(--space-md);
+}
+
+.calendar__job-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-sm);
+  font-size: 13px;
+  transition: background var(--transition-fast);
+  cursor: pointer;
+}
+.calendar__job-item:hover { background: var(--bg-hover); }
+
+/* reminder list */
+.reminder-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.reminder-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-primary);
+  border-left: 3px solid var(--accent-amber);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+}
+
+.reminder-item__time {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   10. EMPTY STATES
+   ============================================================ */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3xl) var(--space-lg);
+  text-align: center;
+}
+
+.empty-state__illustration {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--bg-elevated);
+  margin-bottom: var(--space-lg);
+  color: var(--text-muted);
+  font-size: 40px;
+}
+
+.empty-state__title {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-xs);
+}
+
+.empty-state__desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  max-width: 360px;
+  margin-bottom: var(--space-lg);
+  line-height: 1.5;
+}
+
+/* ============================================================
+   11. SETTINGS
+   ============================================================ */
+.settings-section {
+  margin-bottom: var(--space-xl);
+}
+
+.settings-section__title {
+  font-family: var(--font-heading);
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border-primary);
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--border-primary);
+}
+.settings-row:last-child { border-bottom: none; }
+
+.settings-row__info {
+  flex: 1;
+}
+
+.settings-row__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+
+.settings-row__desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+/* Toggle switch */
+.toggle {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+
+.toggle__track {
+  position: absolute;
+  inset: 0;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.toggle__track::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: var(--text-secondary);
+  border-radius: var(--radius-full);
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+.toggle input:checked + .toggle__track {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+}
+.toggle input:checked + .toggle__track::after {
+  transform: translateX(20px);
+  background: #fff;
+}
+
+.toggle input:focus-visible + .toggle__track {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+}
+
+/* destructive section */
+.settings-section--danger {
+  padding: var(--space-lg);
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  border-radius: var(--radius-lg);
+}
+
+.settings-section--danger .settings-section__title {
+  color: var(--accent-red);
+  border-bottom-color: rgba(239, 68, 68, 0.15);
+}
+
+/* ============================================================
+   12. PAGINATION
+   ============================================================ */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  padding: var(--space-md) 0;
+}
+
+.pagination__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-md);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-secondary);
+  transition: background var(--transition-fast), color var(--transition-fast);
+}
+.pagination__btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+.pagination__btn.is-active {
+  background: var(--accent-blue);
+  color: #fff;
+}
+.pagination__btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.pagination__info {
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 0 var(--space-sm);
+}
+
+/* ============================================================
+   13. LOADING SKELETON
+   ============================================================ */
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-elevated);
+  border-radius: var(--radius-md);
+}
+
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    transparent 100%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+.skeleton--text {
+  height: 14px;
+  width: 80%;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-sm);
+}
+.skeleton--text-short {
+  width: 40%;
+}
+
+.skeleton--heading {
+  height: 22px;
+  width: 50%;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-md);
+}
+
+.skeleton--card {
+  height: 100px;
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-md);
+}
+
+.skeleton--avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+}
+
+.skeleton--row {
+  height: 48px;
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-xs);
+}
+
+/* ============================================================
+   14. DATA VIEWS RESPONSIVE
+   ============================================================ */
+@media (max-width: 1024px) {
+  .detail-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .detail-sidebar {
+    order: -1;
+  }
+
+  .calendar__day {
+    min-height: 56px;
+  }
+}
+
+@media (max-width: 768px) {
+  .view-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .view-header__actions {
+    width: 100%;
+  }
+
+  .filter-bar {
+    flex-direction: column;
+  }
+
+  .filter-bar__search {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .filter-bar__select {
+    width: 100%;
+  }
+
+  .calendar__grid {
+    grid-template-columns: repeat(7, 1fr);
+  }
+
+  .calendar__day {
+    min-height: 44px;
+    padding: var(--space-xs);
+  }
+
+  .calendar__day-number {
+    font-size: 11px;
+  }
+
+  .calendar__dot {
+    width: 4px;
+    height: 4px;
+  }
+
+  .settings-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .customer-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .customer-header__avatar {
+    margin: 0 auto;
+  }
+}

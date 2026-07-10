@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EtaleHub — AI Office Manager for Plumbing & Heating Businesses</title>
+  <meta name="description" content="EtaleHub is the AI office manager for plumbing and heating businesses. Tell it what happened on a job — it handles invoices, payments, reminders, and follow-ups automatically.">
+  <meta name="keywords" content="AI office manager, plumbing software, heating business software, invoice automation, field service AI, plumber CRM">
+  <meta name="author" content="EtaleHub">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="EtaleHub — AI Office Manager for Plumbing & Heating Businesses">
+  <meta property="og:description" content="Tell EtaleHub what happened on a job. It handles invoices, payments, reminders, and follow-ups automatically.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://etalehub.com">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%233B82F6'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold' font-size='16'>E</text></svg>">
+</head>
+<body>
+  <!-- ========== Navigation ========== -->
+  <nav class="nav nav-dark" id="main-nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">E</div>
+        EtaleHub
+      </a>
+
+      <div class="nav__menu" id="nav-menu">
+        <div class="nav__dropdown">
+          <a href="product.html" class="nav__link">Product <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-left:4px"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="nav__dropdown-menu">
+            <a href="ai-office-manager.html" class="nav__dropdown-item">AI Office Manager</a>
+            <a href="features.html" class="nav__dropdown-item">All Features</a>
+            <a href="https://app.etalehub.com#/dashboard" class="nav__dropdown-item">Try AI Demo</a>
+          </div>
+        </div>
+        <a href="pricing.html" class="nav__link">Pricing</a>
+        <a href="plumbing-heating.html" class="nav__link">Plumbing & Heating</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="contact.html" class="nav__link">Contact</a>
+      </div>
+
+      <div class="nav__cta hide-below-desktop">
+        <a href="https://app.etalehub.com" class="btn btn-ghost" style="color: var(--slate-300);">Log in</a>
+        <a href="early-access.html" class="btn btn-primary btn-sm">Join Early Access</a>
+      </div>
+
+      <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span class="nav__toggle-bar"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== 1. Hero Section ========== -->
+  <section class="hero hero-dark bg-grid-dark" id="hero">
+    <div class="container">
+      <div class="hero__grid">
+        <div class="hero__text">
+          <div class="hero__badge">
+            <span class="badge badge--dark">
+              <span class="pulse-dot" style="width:6px;height:6px;"></span>
+              AI-Powered Business Admin
+            </span>
+          </div>
+          <h1 class="hero__title" style="color: var(--white);">
+            The AI office manager for plumbing and heating businesses.
+          </h1>
+          <p class="hero__subtitle">
+            Tell EtaleHub what happened on a job. It updates customers, invoices, payments, reminders, and follow-ups automatically.
+          </p>
+          <div class="hero__actions">
+            <a href="https://app.etalehub.com#/dashboard" class="btn btn-primary btn-lg">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              Try the AI Demo
+            </a>
+            <a href="early-access.html" class="btn btn-secondary-dark btn-lg">Join Early Access</a>
+          </div>
+        </div>
+
+        <div class="hero__visual reveal-right">
+          <!-- Chat-style demo visual -->
+          <div class="hero-demo float">
+            <div class="hero-demo__bar">
+              <div class="hero-demo__dot" style="background:#FF5F56"></div>
+              <div class="hero-demo__dot" style="background:#FFBD2E"></div>
+              <div class="hero-demo__dot" style="background:#27C93F"></div>
+              <span class="hero-demo__label">EtaleHub AI</span>
+            </div>
+            <div class="hero-demo__content">
+              <div class="hero-demo__message">
+                <div class="hero-demo__avatar hero-demo__avatar--user">JD</div>
+                <div class="hero-demo__bubble hero-demo__bubble--user">
+                  I finished Mrs Smith's boiler service. She paid £180 by card. Book her annual service.
+                </div>
+              </div>
+
+              <div class="hero-demo__message">
+                <div class="hero-demo__avatar hero-demo__avatar--ai">AI</div>
+                <div class="hero-demo__bubble hero-demo__bubble--ai" style="font-size: 12px; color: var(--teal-300);">
+                  ✓ Understood. Processing 4 actions...
+                </div>
+              </div>
+
+              <div class="hero-demo__actions">
+                <div class="hero-demo__action">
+                  <span class="hero-demo__action-icon">✅</span>
+                  <div>
+                    <div class="hero-demo__action-text">Job marked complete</div>
+                    <div style="font-size:11px;color:var(--slate-400);">Boiler service — Mrs Smith</div>
+                  </div>
+                  <span class="hero-demo__action-status hero-demo__action-status--done">Done</span>
+                </div>
+                <div class="hero-demo__action">
+                  <span class="hero-demo__action-icon">💳</span>
+                  <div>
+                    <div class="hero-demo__action-text">£180 payment recorded</div>
+                    <div style="font-size:11px;color:var(--slate-400);">Card payment confirmed</div>
+                  </div>
+                  <span class="hero-demo__action-status hero-demo__action-status--done">Done</span>
+                </div>
+                <div class="hero-demo__action">
+                  <span class="hero-demo__action-icon">🧾</span>
+                  <div>
+                    <div class="hero-demo__action-text">Receipt created</div>
+                    <div style="font-size:11px;color:var(--slate-400);">Invoice #EH-0047</div>
+                  </div>
+                  <span class="hero-demo__action-status hero-demo__action-status--done">Done</span>
+                </div>
+                <div class="hero-demo__action">
+                  <span class="hero-demo__action-icon">📅</span>
+                  <div>
+                    <div class="hero-demo__action-text">Annual service reminder set</div>
+                    <div style="font-size:11px;color:var(--slate-400);">Scheduled for next year</div>
+                  </div>
+                  <span class="hero-demo__action-status hero-demo__action-status--done">Done</span>
+                </div>
+                <div class="hero-demo__action" style="border-color: rgba(245,158,11,0.3); background: rgba(245,158,11,0.05);">
+                  <span class="hero-demo__action-icon">📧</span>
+                  <div>
+                    <div class="hero-demo__action-text">Send receipt to Mrs Smith?</div>
+                    <div style="font-size:11px;color:var(--amber-400);">Approval required</div>
+                  </div>
+                  <span class="hero-demo__action-status hero-demo__action-status--pending">Approve</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 2. Problem Section ========== -->
+  <section class="section" id="problem">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="badge badge--red">The Problem</span>
+        <h2>Admin is stealing your evenings.</h2>
+        <p>Small trade businesses lose hours every week on paperwork that could be done automatically. Sound familiar?</p>
+      </div>
+
+      <div class="pain-grid reveal-stagger">
+        <div class="pain-card">
+          <div class="pain-card__icon">📋</div>
+          <div>
+            <div class="pain-card__title">Jobs done, not invoiced</div>
+            <div class="pain-card__desc">You finish a job but the invoice waits until Sunday night.</div>
+          </div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-card__icon">👻</div>
+          <div>
+            <div class="pain-card__title">Customers forgotten</div>
+            <div class="pain-card__desc">Annual services slip through the cracks. Repeat revenue lost.</div>
+          </div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-card__icon">📩</div>
+          <div>
+            <div class="pain-card__title">Quotes not followed up</div>
+            <div class="pain-card__desc">You send a quote and forget to check if they accepted.</div>
+          </div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-card__icon">💸</div>
+          <div>
+            <div class="pain-card__title">Payments chased late</div>
+            <div class="pain-card__desc">Invoices go overdue because no one sent a reminder.</div>
+          </div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-card__icon">📱</div>
+          <div>
+            <div class="pain-card__title">Notes lost in WhatsApp</div>
+            <div class="pain-card__desc">Job details, customer addresses, prices — scattered everywhere.</div>
+          </div>
+        </div>
+        <div class="pain-card">
+          <div class="pain-card__icon">🌙</div>
+          <div>
+            <div class="pain-card__title">Admin left until Sunday</div>
+            <div class="pain-card__desc">Your weekend disappears into spreadsheets and paperwork.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 3. Product Promise Section ========== -->
+  <section class="section section-dark dark-section bg-grid-dark" id="promise">
+    <div class="container">
+      <div class="split">
+        <div class="reveal-left">
+          <span class="badge badge--dark" style="margin-bottom: var(--space-5); display: inline-flex;">How It Works</span>
+          <h2 style="color: var(--white); margin-bottom: var(--space-4);">Run your admin by voice or message.</h2>
+          <p style="color: var(--text-on-dark-muted); margin-bottom: var(--space-8); font-size: var(--text-lg);">
+            Just tell EtaleHub what happened. It does the rest — invoices, reminders, customer records, follow-ups.
+          </p>
+        </div>
+
+        <div class="command-list reveal-right">
+          <div class="command-pill command-pill-dark">
+            <span class="command-pill__icon">💬</span>
+            "Send an invoice for today's job."
+          </div>
+          <div class="command-pill command-pill-dark">
+            <span class="command-pill__icon">💬</span>
+            "Who owes me money?"
+          </div>
+          <div class="command-pill command-pill-dark">
+            <span class="command-pill__icon">💬</span>
+            "Book Sarah's annual boiler service."
+          </div>
+          <div class="command-pill command-pill-dark">
+            <span class="command-pill__icon">💬</span>
+            "Draft a quote for replacing two radiators."
+          </div>
+          <div class="command-pill command-pill-dark">
+            <span class="command-pill__icon">💬</span>
+            "Remind customers from last July to book again."
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 4. How It Works Section ========== -->
+  <section class="section" id="how-it-works">
+    <div class="container container-narrow">
+      <div class="section-header reveal">
+        <span class="badge badge--blue">Simple Process</span>
+        <h2>From job site to done — in one message.</h2>
+        <p>No forms. No menus. No learning curve. Just talk to EtaleHub like you'd talk to your office manager.</p>
+      </div>
+
+      <div class="steps reveal">
+        <div class="step">
+          <div class="step__number">1</div>
+          <div class="step__line"></div>
+          <div class="step__content">
+            <div class="step__title">Tell EtaleHub what happened</div>
+            <div class="step__desc">Use natural language — type or speak. "Finished Mrs Smith's boiler. She paid £180 by card."</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__number">2</div>
+          <div class="step__line"></div>
+          <div class="step__content">
+            <div class="step__title">EtaleHub understands everything</div>
+            <div class="step__desc">It identifies the customer, job, payment, and follow-up actions automatically.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__number">3</div>
+          <div class="step__line"></div>
+          <div class="step__content">
+            <div class="step__title">Admin completed safely</div>
+            <div class="step__desc">Records updated, invoices drafted, reminders scheduled — all in seconds.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__number">4</div>
+          <div class="step__line"></div>
+          <div class="step__content">
+            <div class="step__title">You approve anything risky</div>
+            <div class="step__desc">Before sending invoices, messages, or making changes that affect customers.</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step__number">5</div>
+          <div class="step__line"></div>
+          <div class="step__content">
+            <div class="step__title">Business records stay updated</div>
+            <div class="step__desc">Customer history, revenue, job logs — always accurate, always current.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 5. Core Features Section ========== -->
+  <section class="section section-alt" id="features">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="badge badge--teal">Features</span>
+        <h2>Everything your business needs. Nothing it doesn't.</h2>
+        <p>Built for tradespeople who want to run their business, not manage software.</p>
+      </div>
+
+      <div class="features-grid reveal-stagger">
+        <div class="feature-card">
+          <div class="feature-card__icon">🤖</div>
+          <div class="feature-card__title">AI Office Manager</div>
+          <div class="feature-card__desc">Your intelligent admin assistant. Understands natural language commands and completes business workflows automatically.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon feature-card__icon--teal">🔧</div>
+          <div class="feature-card__title">Job Tracking</div>
+          <div class="feature-card__desc">Track every job from enquiry to completion. Status updates, notes, photos, and full history in one place.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon feature-card__icon--green">👥</div>
+          <div class="feature-card__title">Customer Memory</div>
+          <div class="feature-card__desc">EtaleHub remembers every customer — their equipment, preferences, service history, and when they're due next.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon feature-card__icon--orange">📝</div>
+          <div class="feature-card__title">Quotes</div>
+          <div class="feature-card__desc">Draft professional quotes in seconds. Auto-suggest line items based on similar past jobs and follow up automatically.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">🧾</div>
+          <div class="feature-card__title">Invoices</div>
+          <div class="feature-card__desc">Create and send invoices the moment a job is done. Track payment status and chase overdue invoices automatically.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon feature-card__icon--green">💰</div>
+          <div class="feature-card__title">Payment Tracking</div>
+          <div class="feature-card__desc">Record payments instantly. See who's paid, who owes, and what's overdue — all from one dashboard.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon feature-card__icon--amber">📅</div>
+          <div class="feature-card__title">Service Reminders</div>
+          <div class="feature-card__desc">Never forget an annual service again. Automatic reminders for boiler servicing, safety checks, and follow-ups.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon feature-card__icon--teal">📊</div>
+          <div class="feature-card__title">Daily Briefings</div>
+          <div class="feature-card__desc">Start every day knowing what's ahead. Jobs, revenue, overdue invoices, and opportunities — summarised by AI.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon feature-card__icon--orange">🔁</div>
+          <div class="feature-card__title">Follow-up Automation</div>
+          <div class="feature-card__desc">Automated quote follow-ups, payment reminders, review requests, and customer reactivation campaigns.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon feature-card__icon--amber">🛡️</div>
+          <div class="feature-card__title">Approval Controls</div>
+          <div class="feature-card__desc">You stay in control. Approve risky actions before they happen. Full audit trail of every AI decision.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon">📜</div>
+          <div class="feature-card__title">Audit Logs</div>
+          <div class="feature-card__desc">Complete history of every action. See what changed, when, and why — for full transparency and accountability.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-card__icon feature-card__icon--teal">🎙️</div>
+          <div class="feature-card__title">Voice Notes</div>
+          <div class="feature-card__desc">Talk to EtaleHub on your phone. Dictate job notes, complete admin, and manage your business hands-free.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 6. Trust & Safety Section ========== -->
+  <section class="section section-dark dark-section" id="trust">
+    <div class="container">
+      <div class="split">
+        <div class="reveal-left">
+          <span class="badge badge--dark" style="margin-bottom: var(--space-5); display: inline-flex;">Trust & Safety</span>
+          <h2 style="color: var(--white); margin-bottom: var(--space-4);">You stay in control.</h2>
+          <p style="color: var(--text-on-dark-muted); font-size: var(--text-lg); margin-bottom: var(--space-8);">
+            EtaleHub is designed to help, not to surprise. Every risky action needs your approval. Every change is logged. You can always see, edit, and undo.
+          </p>
+        </div>
+
+        <div class="reveal-right">
+          <div class="trust-grid" style="grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+            <div class="trust-item">
+              <div class="trust-item__icon">✓</div>
+              <div class="trust-item__text">Approval before risky actions</div>
+            </div>
+            <div class="trust-item">
+              <div class="trust-item__icon">✓</div>
+              <div class="trust-item__text">Full audit history</div>
+            </div>
+            <div class="trust-item">
+              <div class="trust-item__icon">✓</div>
+              <div class="trust-item__text">Editable customer records</div>
+            </div>
+            <div class="trust-item">
+              <div class="trust-item__icon">✓</div>
+              <div class="trust-item__text">Payment-safe workflows</div>
+            </div>
+            <div class="trust-item">
+              <div class="trust-item__icon">✓</div>
+              <div class="trust-item__text">Data privacy controls</div>
+            </div>
+            <div class="trust-item">
+              <div class="trust-item__icon">✓</div>
+              <div class="trust-item__text">Human-in-the-loop approvals</div>
+            </div>
+            <div class="trust-item" style="grid-column: span 2;">
+              <div class="trust-item__icon">✓</div>
+              <div class="trust-item__text">Clear confirmation after every AI action</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 7. Niche-Specific Section ========== -->
+  <section class="section" id="niche">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="badge badge--blue">Purpose-Built</span>
+        <h2>Built first for plumbing and heating businesses.</h2>
+        <p>We chose this industry because the admin challenges are real, repetitive, and perfectly suited to AI automation.</p>
+      </div>
+
+      <div class="niche-benefits reveal-stagger">
+        <div class="niche-benefit">
+          <div class="niche-benefit__icon" style="background: var(--blue-50); color: var(--blue-500);">🔥</div>
+          <div>
+            <div class="niche-benefit__title">Boiler services repeat annually</div>
+            <div class="niche-benefit__desc">Automatic reminders mean you never miss a rebooking opportunity.</div>
+          </div>
+        </div>
+        <div class="niche-benefit">
+          <div class="niche-benefit__icon" style="background: var(--green-100); color: var(--green-500);">📬</div>
+          <div>
+            <div class="niche-benefit__title">Customers need reminders</div>
+            <div class="niche-benefit__desc">Most homeowners forget their annual service. A simple reminder brings them back.</div>
+          </div>
+        </div>
+        <div class="niche-benefit">
+          <div class="niche-benefit__icon" style="background: var(--amber-100); color: var(--amber-500);">⚡</div>
+          <div>
+            <div class="niche-benefit__title">Invoices must be sent quickly</div>
+            <div class="niche-benefit__desc">The longer you wait, the harder it is to collect. EtaleHub invoices on the spot.</div>
+          </div>
+        </div>
+        <div class="niche-benefit">
+          <div class="niche-benefit__icon" style="background: var(--red-100); color: var(--red-500);">🚨</div>
+          <div>
+            <div class="niche-benefit__title">Emergency jobs create admin pressure</div>
+            <div class="niche-benefit__desc">Call-outs leave no time for paperwork. EtaleHub catches up for you.</div>
+          </div>
+        </div>
+        <div class="niche-benefit">
+          <div class="niche-benefit__icon" style="background: rgba(20,184,166,0.1); color: var(--teal-500);">📊</div>
+          <div>
+            <div class="niche-benefit__title">Quotes need follow-up</div>
+            <div class="niche-benefit__desc">Don't let quotes go cold. AI follows up at the right time to convert more work.</div>
+          </div>
+        </div>
+        <div class="niche-benefit">
+          <div class="niche-benefit__icon" style="background: var(--blue-50); color: var(--blue-500);">📚</div>
+          <div>
+            <div class="niche-benefit__title">Service history matters</div>
+            <div class="niche-benefit__desc">Know every boiler, every job, every note — for every customer, instantly.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 8. AI Demo Section ========== -->
+  <section class="section section-dark dark-section bg-grid-dark" id="demo">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="badge badge--dark">Try It Now</span>
+        <h2 style="color: var(--white);">See EtaleHub in action.</h2>
+        <p style="color: var(--text-on-dark-muted);">Type a command or pick one below to see how EtaleHub processes your request.</p>
+      </div>
+
+      <div class="reveal-scale" style="max-width: 700px; margin: 0 auto;">
+        <div class="demo-panel">
+          <div class="demo-panel__header">
+            <div class="demo-panel__dots">
+              <div class="demo-panel__dot demo-panel__dot--red"></div>
+              <div class="demo-panel__dot demo-panel__dot--yellow"></div>
+              <div class="demo-panel__dot demo-panel__dot--green"></div>
+            </div>
+            <span class="demo-panel__title">EtaleHub Command Centre</span>
+            <div class="pulse-dot" style="margin-left: auto;"></div>
+          </div>
+
+          <div class="demo-panel__body" id="inline-demo-output">
+            <div style="text-align: center; padding: var(--space-8) var(--space-4);">
+              <div style="font-size: 40px; margin-bottom: var(--space-4);">💬</div>
+              <h4 style="color: var(--white); margin-bottom: var(--space-2); font-size: var(--text-base);">Try a command</h4>
+              <p style="color: var(--slate-400); font-size: var(--text-sm);">Type below or click a suggestion</p>
+            </div>
+          </div>
+
+          <div style="padding: 0 var(--space-6) var(--space-4);">
+            <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); margin-bottom: var(--space-4);">
+              <button class="inline-demo-suggestion" data-command="I serviced Mrs Smith's boiler. She paid £180 by card. Remind her next year." style="padding: 6px 14px; background: var(--navy-700); border: 1px solid var(--border-dark); border-radius: var(--radius-full); color: var(--slate-300); font-size: 12px; cursor: pointer; transition: all 0.2s; font-family: var(--font-body);">🔧 Complete boiler service</button>
+              <button class="inline-demo-suggestion" data-command="Draft a quote for replacing two radiators." style="padding: 6px 14px; background: var(--navy-700); border: 1px solid var(--border-dark); border-radius: var(--radius-full); color: var(--slate-300); font-size: 12px; cursor: pointer; transition: all 0.2s; font-family: var(--font-body);">📝 Draft a quote</button>
+              <button class="inline-demo-suggestion" data-command="Who has unpaid invoices?" style="padding: 6px 14px; background: var(--navy-700); border: 1px solid var(--border-dark); border-radius: var(--radius-full); color: var(--slate-300); font-size: 12px; cursor: pointer; transition: all 0.2s; font-family: var(--font-body);">💰 Check payments</button>
+              <button class="inline-demo-suggestion" data-command="Book John for Friday morning." style="padding: 6px 14px; background: var(--navy-700); border: 1px solid var(--border-dark); border-radius: var(--radius-full); color: var(--slate-300); font-size: 12px; cursor: pointer; transition: all 0.2s; font-family: var(--font-body);">📅 Book appointment</button>
+              <button class="inline-demo-suggestion" data-command="Send a polite payment reminder to Ahmed." style="padding: 6px 14px; background: var(--navy-700); border: 1px solid var(--border-dark); border-radius: var(--radius-full); color: var(--slate-300); font-size: 12px; cursor: pointer; transition: all 0.2s; font-family: var(--font-body);">✉️ Payment reminder</button>
+            </div>
+          </div>
+
+          <div class="demo-panel__input-area" style="margin: 0 var(--space-6) var(--space-6);">
+            <input type="text" class="demo-panel__input" id="inline-demo-input" placeholder="What happened on the job?">
+            <button class="demo-panel__send" id="inline-demo-send" aria-label="Send command">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 9. Pricing Preview Section ========== -->
+  <section class="section" id="pricing">
+    <div class="container">
+      <div class="section-header reveal">
+        <span class="badge badge--blue">Early Access Pricing</span>
+        <h2>Simple pricing. No surprises.</h2>
+        <p>Lock in early access pricing before we launch. Cancel anytime.</p>
+      </div>
+
+      <div class="pricing-grid reveal-stagger">
+        <!-- Starter -->
+        <div class="pricing-card">
+          <div class="pricing-card__name">Starter</div>
+          <div class="pricing-card__desc">For solo operators getting started</div>
+          <div class="pricing-card__price">£39<span>/mo</span></div>
+          <div class="pricing-card__period">Billed monthly</div>
+          <div class="pricing-card__features">
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              AI job notes & admin
+            </div>
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Customer records
+            </div>
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Basic invoices
+            </div>
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Basic reminders
+            </div>
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Daily briefing
+            </div>
+          </div>
+          <a href="early-access.html" class="btn btn-secondary btn-full">Join Early Access</a>
+        </div>
+
+        <!-- Pro (Popular) -->
+        <div class="pricing-card pricing-card--popular">
+          <div class="pricing-card__badge">Most Popular</div>
+          <div class="pricing-card__name">Pro</div>
+          <div class="pricing-card__desc">For serious solo operators & small teams</div>
+          <div class="pricing-card__price">£89<span>/mo</span></div>
+          <div class="pricing-card__period">Billed monthly</div>
+          <div class="pricing-card__features">
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Everything in Starter
+            </div>
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Voice workflows
+            </div>
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Quote follow-ups
+            </div>
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Payment reminders
+            </div>
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Annual service campaigns
+            </div>
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              AI automation rules
+            </div>
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Business insights
+            </div>
+          </div>
+          <a href="early-access.html" class="btn btn-primary btn-full">Join Early Access</a>
+        </div>
+
+        <!-- Team -->
+        <div class="pricing-card">
+          <div class="pricing-card__name">Team</div>
+          <div class="pricing-card__desc">For small teams growing fast</div>
+          <div class="pricing-card__price">£179<span>/mo</span></div>
+          <div class="pricing-card__period">Billed monthly</div>
+          <div class="pricing-card__features">
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Everything in Pro
+            </div>
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Multi-user access
+            </div>
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Team scheduling
+            </div>
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Permissions & roles
+            </div>
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Advanced reporting
+            </div>
+            <div class="pricing-card__feature">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              Team workflows
+            </div>
+          </div>
+          <a href="early-access.html" class="btn btn-secondary btn-full">Join Early Access</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 10. Final CTA Section ========== -->
+  <section class="cta-section" id="final-cta">
+    <div class="cta-section__content reveal">
+      <h2>Stop running your business from memory.</h2>
+      <p>Let EtaleHub handle the admin after every job. Join the early access programme and be one of the first to try it.</p>
+      <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
+        <a href="early-access.html" class="btn btn-primary btn-xl">
+          Join Early Access
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </a>
+        <a href="https://app.etalehub.com#/dashboard" class="btn btn-secondary-dark btn-xl">Try the AI Demo</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== Footer ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="index.html" class="footer__logo">
+            <div class="nav__logo-icon">E</div>
+            EtaleHub
+          </a>
+          <p class="footer__desc">The AI office manager for plumbing and heating businesses. Spend less time on paperwork. Spend more time earning.</p>
+          <div class="footer__social">
+            <a href="#" class="footer__social-link" aria-label="Twitter">𝕏</a>
+            <a href="#" class="footer__social-link" aria-label="LinkedIn">in</a>
+            <a href="#" class="footer__social-link" aria-label="Facebook">f</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Product</h4>
+          <div class="footer__links">
+            <a href="product.html" class="footer__link">Product Overview</a>
+            <a href="ai-office-manager.html" class="footer__link">AI Office Manager</a>
+            <a href="features.html" class="footer__link">Features</a>
+            <a href="pricing.html" class="footer__link">Pricing</a>
+            <a href="https://app.etalehub.com#/dashboard" class="footer__link">AI Demo</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Industries</h4>
+          <div class="footer__links">
+            <a href="plumbing-heating.html" class="footer__link">Plumbing & Heating</a>
+            <a href="seo/ai-software-plumbers.html" class="footer__link">AI for Plumbers</a>
+            <a href="seo/plumbing-invoice-software.html" class="footer__link">Invoice Software</a>
+            <a href="seo/plumbing-quote-software.html" class="footer__link">Quote Software</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Company</h4>
+          <div class="footer__links">
+            <a href="about.html" class="footer__link">About</a>
+            <a href="contact.html" class="footer__link">Contact</a>
+            <a href="blog.html" class="footer__link">Blog</a>
+            <a href="knowledge-base.html" class="footer__link">Knowledge Base</a>
+            <a href="early-access.html" class="footer__link">Early Access</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <span>© 2025 EtaleHub Ltd. All rights reserved.</span>
+        <div class="footer__bottom-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/ai-demo.js"></script>
+</body>
+</html>

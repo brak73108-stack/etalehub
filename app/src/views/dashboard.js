@@ -1,0 +1,179 @@
+/**
+ * EtaleHub Dashboard View
+ * The main daily command centre with morning briefing and priority actions.
+ */
+
+import { getAll as getAllJobs } from '../db/jobs.js';
+import { getAll as getAllInvoices } from '../db/invoices.js';
+import { getPending as getPendingApprovals } from '../db/approvals.js';
+import { getDue as getDueReminders } from '../db/reminders.js';
+import { getRecent as getRecentAiActions } from '../db/ai-actions.js';
+
+export default async function renderDashboard() {
+  const jobs = await getAllJobs();
+  const invoices = await getAllInvoices();
+  const approvals = await getPendingApprovals();
+  const reminders = await getDueReminders();
+  const aiActions = await getRecentAiActions(5);
+  
+  const todayStr = new Date().toISOString().split('T')[0];
+  
+  const todayJobs = jobs.filter(j => j.scheduledDate && j.scheduledDate.startsWith(todayStr));
+  const expectedRevenue = todayJobs.reduce((sum, j) => sum + (j.finalPrice || 0), 0) || 540; // fallback for demo if none set
+  const overdueInvoices = invoices.filter(i => i.status === 'overdue');
+  
+  const aiCompletedJobs = jobs.filter(j => j.status === 'complete' && j.serviceHistoryNote && j.serviceHistoryNote.includes('AI workflow'));
+  const paidThisMonth = invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + i.total, 0);
+  
+  const suggestedCommand = "I finished Mrs Smith’s boiler service. She paid £180 by card. Book her annual service.";
+
+  return `
+    <div class="view-header">
+      <div>
+        <h1 class="view-title">Today's Admin</h1>
+        <p class="view-subtitle">${new Date().toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+      </div>
+    </div>
+    
+    <!-- Demo Banner -->
+    <div style="background: rgba(20, 184, 166, 0.1); border: 1px solid var(--accent-teal); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+      <span style="font-size: 1.25rem;">ℹ️</span>
+      <div style="font-size: 0.9rem; color: var(--text-color);">
+        <strong>Demo mode:</strong> EtaleHub is running locally with sample plumbing/heating data. No real messages, invoices, or payments are sent.
+      </div>
+    </div>
+    
+    <!-- Morning Briefing Card -->
+    <div class="card" style="background: linear-gradient(135deg, var(--bg-elevated) 0%, #1a202c 100%); border-left: 4px solid var(--accent-teal); margin-bottom: 2rem;">
+      <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem; display:flex; align-items:center; gap:0.5rem;">
+        <span>☀️</span> Good morning.
+      </h2>
+      <p style="font-size: 1.1rem; color: var(--text-muted); line-height: 1.6;">
+        You have <strong class="text-accent">${todayJobs.length} jobs</strong> today, 
+        <strong class="text-success">£${expectedRevenue}</strong> expected revenue, 
+        <strong class="text-danger">${overdueInvoices.length} overdue invoices</strong>, 
+        and <strong class="text-warning">${approvals.length} AI approvals waiting</strong>.
+      </p>
+      
+      <div style="margin-top: 1.5rem; padding: 1rem; background: var(--bg-primary); border-radius: 8px; border: 1px dashed var(--accent-teal);">
+        <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Try asking EtaleHub:</div>
+        <div style="display:flex; flex-wrap: wrap; gap: 1rem; align-items:center;">
+          <code style="background: transparent; color: white; padding: 0; font-size: 1rem;">"${suggestedCommand}"</code>
+          <button class="btn btn-primary btn-sm" onclick="window.location.hash='#/command'; setTimeout(() => { document.getElementById('chatInput').value='${suggestedCommand}'; document.getElementById('chatInput').focus(); }, 100);">▶ Run Mrs Smith demo</button>
+        </div>
+      </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+      <!-- Priority Actions -->
+      <div class="card">
+        <h3 style="margin-bottom: 1rem; display:flex; align-items:center; gap:0.5rem;">
+          <span style="color:var(--accent-danger)">⚡</span> Priority Actions
+        </h3>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+          ${approvals.length > 0 ? `
+            <div class="priority-item" onclick="window.location.hash='#/command'" style="display:flex; justify-content:space-between; padding:1rem; background:var(--bg-primary); border-radius:8px; cursor:pointer; border: 1px solid var(--accent-warning);">
+              <div>
+                <span class="badge badge-warning" style="margin-bottom:0.25rem;">Needs approval</span>
+                <div class="font-medium">${approvals.length} AI actions waiting for you</div>
+              </div>
+              <span>→</span>
+            </div>
+          ` : ''}
+          
+          ${overdueInvoices.length > 0 ? `
+            <div class="priority-item" onclick="window.location.hash='#/money'" style="display:flex; justify-content:space-between; padding:1rem; background:var(--bg-primary); border-radius:8px; cursor:pointer;">
+              <div>
+                <span class="badge badge-danger" style="margin-bottom:0.25rem;">Money waiting</span>
+                <div class="font-medium">${overdueInvoices.length} invoices are overdue</div>
+              </div>
+              <span>→</span>
+            </div>
+          ` : ''}
+          
+          ${reminders.length > 0 ? `
+            <div class="priority-item" onclick="window.location.hash='#/calendar'" style="display:flex; justify-content:space-between; padding:1rem; background:var(--bg-primary); border-radius:8px; cursor:pointer;">
+              <div>
+                <span class="badge badge-info" style="margin-bottom:0.25rem;">Follow-up due</span>
+                <div class="font-medium">${reminders.length} service reminders need attention</div>
+              </div>
+              <span>→</span>
+            </div>
+          ` : ''}
+          
+          ${approvals.length === 0 && overdueInvoices.length === 0 && reminders.length === 0 ? `
+            <div class="empty-state" style="padding: 2rem; background: transparent;">
+              <span style="font-size: 2rem; margin-bottom: 0.5rem; display:block;">🎉</span>
+              <div>All caught up! No priority actions.</div>
+            </div>
+          ` : ''}
+        </div>
+      </div>
+      
+      <!-- AI Office Manager Summary -->
+      <div class="card" style="border: 1px solid var(--accent-teal);">
+        <h3 style="margin-bottom: 1rem; color: var(--accent-teal); display:flex; align-items:center; gap:0.5rem;">
+          🤖 EtaleHub has your admin covered.
+        </h3>
+        <ul style="list-style:none; padding:0; margin:0; display:flex; flex-direction:column; gap:0.75rem;">
+          <li style="display:flex; justify-content:space-between;"><span class="text-muted">Jobs completed by AI</span> <strong class="text-accent">${aiCompletedJobs.length}</strong></li>
+          <li style="display:flex; justify-content:space-between;"><span class="text-muted">Approvals waiting</span> <strong class="text-warning">${approvals.length}</strong></li>
+        </ul>
+        <hr style="border:0; border-top: 1px solid var(--border-color); margin: 1rem 0;" />
+        <h4 style="margin-bottom: 0.5rem; font-size: 0.9rem;" class="text-muted">Recent AI Activity</h4>
+        <div style="font-size: 0.85rem; display:flex; flex-direction:column; gap:0.5rem;">
+          ${aiActions.length > 0 ? aiActions.slice(0,3).map(a => `
+            <div style="padding-left:0.5rem; border-left:2px solid var(--accent-teal);">
+              <div class="text-muted">${new Date(a.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+              <div>Interpreted: <span class="font-medium">${a.interpretedIntent}</span></div>
+            </div>
+          `).join('') : '<div class="text-muted">No recent activity</div>'}
+        </div>
+      </div>
+    </div>
+    
+    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+      <!-- Today's Schedule -->
+      <div class="card">
+        <h3 style="margin-bottom: 1rem;">Today's Schedule</h3>
+        <table class="data-table">
+          <thead>
+            <tr><th>Job Details</th><th>Customer</th><th>Status</th><th>Value</th></tr>
+          </thead>
+          <tbody>
+            ${todayJobs.map(j => `
+              <tr onclick="window.location.hash='#/jobs'" style="cursor:pointer;" class="table-row">
+                <td>
+                  <div class="font-medium">${j.title}</div>
+                  <div class="text-muted text-sm">${j.jobType.replace('_', ' ')}</div>
+                </td>
+                <td><span class="text-accent">Customer ID: ${j.customerId}</span></td>
+                <td><span class="badge badge-${j.status === 'complete' ? 'success' : 'warning'}">${j.status}</span></td>
+                <td>£${j.finalPrice || 'TBD'}</td>
+              </tr>
+            `).join('') || '<tr><td colspan="4" class="text-muted text-center">No jobs scheduled for today</td></tr>'}
+          </tbody>
+        </table>
+      </div>
+      
+      <!-- Business Health -->
+      <div class="card">
+        <h3 style="margin-bottom: 1rem;">Business Health</h3>
+        <div style="display:flex; flex-direction:column; gap:1rem;">
+          <div>
+            <div class="text-muted text-sm">Paid This Month</div>
+            <div class="font-medium text-success" style="font-size:1.5rem;">£${paidThisMonth.toFixed(2)}</div>
+          </div>
+          <div>
+            <div class="text-muted text-sm">Overdue Amount</div>
+            <div class="font-medium text-danger" style="font-size:1.5rem;">£${overdueInvoices.reduce((s, i) => s + i.total, 0).toFixed(2)}</div>
+          </div>
+          <div>
+            <div class="text-muted text-sm">Active Quotes</div>
+            <div class="font-medium" style="font-size:1.5rem;">2 pending</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}

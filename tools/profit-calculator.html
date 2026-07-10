@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Job Profit Calculator — EtaleHub</title>
+  <meta name="description" content="Calculate project profits, parts costs, labor margins, and check alignment with target rates.">
+  <meta name="author" content="EtaleHub">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/design-system.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" href="../css/animations.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%233B82F6'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold' font-size='16'>E</text></svg>">
+</head>
+<body>
+  <!-- ========== Navigation ========== -->
+  <nav class="nav" id="main-nav">
+    <div class="nav__inner">
+      <a href="../index.html" class="nav__logo">
+        <div class="nav__logo-icon">E</div>
+        EtaleHub
+      </a>
+
+      <div class="nav__menu" id="nav-menu">
+        <div class="nav__dropdown">
+          <a href="../product.html" class="nav__link">Product <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-left:4px"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="nav__dropdown-menu">
+            <a href="../ai-office-manager.html" class="nav__dropdown-item">AI Office Manager</a>
+            <a href="../features.html" class="nav__dropdown-item">All Features</a>
+            <a href="../ai-demo.html" class="nav__dropdown-item">Try AI Demo</a>
+          </div>
+        </div>
+        <a href="../pricing.html" class="nav__link">Pricing</a>
+        <a href="../plumbing-heating.html" class="nav__link">Plumbing & Heating</a>
+        <a href="../about.html" class="nav__link">About</a>
+        <a href="../contact.html" class="nav__link">Contact</a>
+      </div>
+
+      <div class="nav__cta hide-below-desktop">
+        <a href="../login.html" class="btn btn-ghost">Log in</a>
+        <a href="../early-access.html" class="btn btn-primary btn-sm">Join Early Access</a>
+      </div>
+
+      <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span class="nav__toggle-bar"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== Page Header ========== -->
+  <header class="page-header bg-grid" style="padding-top: calc(72px + var(--space-12)); padding-bottom: var(--space-8);">
+    <div class="container">
+      <span class="badge badge--blue" style="margin-bottom: var(--space-3)">Free Trade Tool</span>
+      <h1>Free Job Profit Calculator</h1>
+      <p style="max-width: 600px; margin: 0 auto; color: var(--text-secondary);">
+        Understand your actual earnings on each service. Enter costs, parts, hours, and rates to outline margins.
+      </p>
+    </div>
+  </header>
+
+  <!-- ========== Main Content ========== -->
+  <main class="section-sm">
+    <div class="container">
+      <div class="split" style="align-items: start; gap: var(--space-8);">
+        <!-- Form -->
+        <div class="card reveal-left" style="box-shadow: var(--shadow-xl);">
+          <h3 style="margin-bottom: var(--space-4);">Project Metrics</h3>
+          <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+            <div class="form-group">
+              <label for="p-rev" class="form-label">Job Revenue (Total charged to customer)</label>
+              <input type="number" id="p-rev" class="form-input" placeholder="750" value="750">
+            </div>
+            <div class="form-group">
+              <label for="p-parts" class="form-label">Parts & Materials Cost</label>
+              <input type="number" id="p-parts" class="form-input" placeholder="320" value="320">
+            </div>
+            <div class="form-group">
+              <label for="p-travel" class="form-label">Travel / Fuel Cost</label>
+              <input type="number" id="p-travel" class="form-input" placeholder="30" value="30">
+            </div>
+            <div class="form-group">
+              <label for="p-hours" class="form-label">Hours Worked (On-site & travel)</label>
+              <input type="number" id="p-hours" class="form-input" placeholder="5" value="5">
+            </div>
+            <div class="form-group">
+              <label for="p-target" class="form-label">Target Hourly Rate (£/hr)</label>
+              <input type="number" id="p-target" class="form-input" placeholder="60" value="60">
+            </div>
+            <button id="calc-btn" class="btn btn-primary" style="margin-top: var(--space-2);">Calculate Margin</button>
+          </div>
+        </div>
+
+        <!-- Output Preview -->
+        <div class="card-elevated reveal-right">
+          <h3 style="margin-bottom: var(--space-4);">Profit Breakdown</h3>
+          <div class="tool-output__content" id="calc-output" style="min-height: 160px; font-family: monospace; font-size: 13px;">
+            <!-- Output -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========== Footer ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="../index.html" class="footer__logo">
+            <div class="nav__logo-icon">E</div>
+            EtaleHub
+          </a>
+          <p class="footer__desc">The AI office manager for plumbing and heating businesses. Spend less time on paperwork. Spend more time earning.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const calcBtn = document.getElementById('calc-btn');
+      const output = document.getElementById('calc-output');
+
+      function calculate() {
+        const rev = parseFloat(document.getElementById('p-rev').value) || 0;
+        const parts = parseFloat(document.getElementById('p-parts').value) || 0;
+        const travel = parseFloat(document.getElementById('p-travel').value) || 0;
+        const hours = parseFloat(document.getElementById('p-hours').value) || 1;
+        const target = parseFloat(document.getElementById('p-target').value) || 0;
+
+        const totalCost = parts + travel;
+        const netProfit = rev - totalCost;
+        const margin = rev > 0 ? (netProfit / rev) * 100 : 0;
+        const hourlyRate = hours > 0 ? netProfit / hours : 0;
+        const meetsTarget = hourlyRate >= target;
+
+        const text = `
+-----------------------------------------
+          PROFIT BREAKDOWN
+-----------------------------------------
+Revenue:          £${rev.toFixed(2)}
+Total Costs:      £${totalCost.toFixed(2)}
+  - Parts:        £${parts.toFixed(2)}
+  - Travel:       £${travel.toFixed(2)}
+
+Net Profit:       £${netProfit.toFixed(2)}
+Profit Margin:    ${margin.toFixed(1)}%
+Effective Rate:   £${hourlyRate.toFixed(2)}/hr
+
+Target Rate:      £${target.toFixed(2)}/hr
+Meets Target:     ${meetsTarget ? '✅ YES' : '❌ NO'}
+-----------------------------------------
+        `;
+        output.innerText = text;
+      }
+
+      calcBtn.addEventListener('click', calculate);
+      calculate();
+    });
+  </script>
+</body>
+</html>

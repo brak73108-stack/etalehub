@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Join Early Access — EtaleHub</title>
+  <meta name="description" content="Apply for early access to EtaleHub and join trade business owners automating their field admin. Lock in special launch rates.">
+  <meta name="keywords" content="join early access, plumber automation software early access, trade manager early access">
+  <meta name="author" content="EtaleHub">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%233B82F6'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold' font-size='16'>E</text></svg>">
+</head>
+<body>
+  <!-- ========== Navigation ========== -->
+  <nav class="nav" id="main-nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">E</div>
+        EtaleHub
+      </a>
+
+      <div class="nav__menu" id="nav-menu">
+        <div class="nav__dropdown">
+          <a href="product.html" class="nav__link">Product <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-left:4px"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="nav__dropdown-menu">
+            <a href="ai-office-manager.html" class="nav__dropdown-item">AI Office Manager</a>
+            <a href="features.html" class="nav__dropdown-item">All Features</a>
+            <a href="https://app.etalehub.com#/dashboard" class="nav__dropdown-item">Try AI Demo</a>
+          </div>
+        </div>
+        <a href="pricing.html" class="nav__link">Pricing</a>
+        <a href="plumbing-heating.html" class="nav__link">Plumbing & Heating</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="contact.html" class="nav__link">Contact</a>
+      </div>
+
+      <div class="nav__cta hide-below-desktop">
+        <a href="https://app.etalehub.com" class="btn btn-ghost">Log in</a>
+        <a href="early-access.html" class="btn btn-primary btn-sm">Join Early Access</a>
+      </div>
+
+      <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span class="nav__toggle-bar"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== Page Header ========== -->
+  <header class="page-header bg-grid" style="padding-top: calc(72px + var(--space-12)); padding-bottom: var(--space-8);">
+    <div class="container">
+      <span class="badge badge--blue" style="margin-bottom: var(--space-3)">Early Access</span>
+      <h1>Join the early access programme.</h1>
+      <p style="max-width: 600px; margin: 0 auto; color: var(--text-secondary);">
+        Be one of the first 100 trade businesses to automate your paperwork with EtaleHub and lock in permanent launch rates.
+      </p>
+    </div>
+  </header>
+
+  <!-- ========== Form Section ========== -->
+  <main class="section-sm" style="padding-bottom: var(--space-20);">
+    <div class="container container-narrow">
+      <div class="card-elevated reveal">
+        <form id="early-access-form" class="auth-form">
+          <div class="form-group">
+            <label for="ea-name" class="form-label">Full Name</label>
+            <input type="text" id="ea-name" class="form-input" placeholder="David Smith" required>
+          </div>
+          <div class="form-group">
+            <label for="ea-email" class="form-label">Email Address</label>
+            <input type="email" id="ea-email" class="form-input" placeholder="david@smithheating.co.uk" required>
+          </div>
+          <div class="form-group">
+            <label for="ea-company" class="form-label">Business Name</label>
+            <input type="text" id="ea-company" class="form-input" placeholder="Smith Heating Services Ltd" required>
+          </div>
+          <div class="form-group">
+            <label for="ea-industry" class="form-label">Primary Industry</label>
+            <select id="ea-industry" class="form-select" required>
+              <option value="">Select your trade...</option>
+              <option value="plumbing">Plumbing & Heating</option>
+              <option value="hvac">HVAC / Air Conditioning</option>
+              <option value="electrical">Electrical Services</option>
+              <option value="multi">Multi-trade / Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="ea-size" class="form-label">Team Size</label>
+            <select id="ea-size" class="form-select" required>
+              <option value="">Select team size...</option>
+              <option value="solo">Solo Operator (Just me)</option>
+              <option value="small">Small Team (2 - 5 people)</option>
+              <option value="medium">Medium Team (6 - 15 people)</option>
+              <option value="large">Large Team (15+ people)</option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-accent btn-full" style="margin-top: var(--space-4); font-weight: 700;">Request Invite</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========== Footer ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="index.html" class="footer__logo">
+            <div class="nav__logo-icon">E</div>
+            EtaleHub
+          </a>
+          <p class="footer__desc">The AI office manager for plumbing and heating businesses. Spend less time on paperwork. Spend more time earning.</p>
+          <div class="footer__social">
+            <a href="#" class="footer__social-link" aria-label="Twitter">𝕏</a>
+            <a href="#" class="footer__social-link" aria-label="LinkedIn">in</a>
+            <a href="#" class="footer__social-link" aria-label="Facebook">f</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Product</h4>
+          <div class="footer__links">
+            <a href="product.html" class="footer__link">Product Overview</a>
+            <a href="ai-office-manager.html" class="footer__link">AI Office Manager</a>
+            <a href="features.html" class="footer__link">Features</a>
+            <a href="pricing.html" class="footer__link">Pricing</a>
+            <a href="https://app.etalehub.com#/dashboard" class="footer__link">AI Demo</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Industries</h4>
+          <div class="footer__links">
+            <a href="plumbing-heating.html" class="footer__link">Plumbing & Heating</a>
+            <a href="seo/ai-software-plumbers.html" class="footer__link">AI for Plumbers</a>
+            <a href="seo/plumbing-invoice-software.html" class="footer__link">Invoice Software</a>
+            <a href="seo/plumbing-quote-software.html" class="footer__link">Quote Software</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Company</h4>
+          <div class="footer__links">
+            <a href="about.html" class="footer__link">About</a>
+            <a href="contact.html" class="footer__link">Contact</a>
+            <a href="blog.html" class="footer__link">Blog</a>
+            <a href="knowledge-base.html" class="footer__link">Knowledge Base</a>
+            <a href="early-access.html" class="footer__link">Early Access</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <span>© 2025 EtaleHub Ltd. All rights reserved.</span>
+        <div class="footer__bottom-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      handleFormSubmit('early-access-form', 'Invite requested!');
+    });
+  </script>
+</body>
+</html>

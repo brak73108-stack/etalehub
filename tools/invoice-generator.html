@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Plumbing Invoice Generator — EtaleHub</title>
+  <meta name="description" content="Generate professional, print-ready invoices for plumbing, heating, and trade jobs. Free client-side tool.">
+  <meta name="author" content="EtaleHub">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/design-system.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" href="../css/animations.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%233B82F6'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold' font-size='16'>E</text></svg>">
+</head>
+<body>
+  <!-- ========== Navigation ========== -->
+  <nav class="nav" id="main-nav">
+    <div class="nav__inner">
+      <a href="../index.html" class="nav__logo">
+        <div class="nav__logo-icon">E</div>
+        EtaleHub
+      </a>
+
+      <div class="nav__menu" id="nav-menu">
+        <div class="nav__dropdown">
+          <a href="../product.html" class="nav__link">Product <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-left:4px"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="nav__dropdown-menu">
+            <a href="../ai-office-manager.html" class="nav__dropdown-item">AI Office Manager</a>
+            <a href="../features.html" class="nav__dropdown-item">All Features</a>
+            <a href="../ai-demo.html" class="nav__dropdown-item">Try AI Demo</a>
+          </div>
+        </div>
+        <a href="../pricing.html" class="nav__link">Pricing</a>
+        <a href="../plumbing-heating.html" class="nav__link">Plumbing & Heating</a>
+        <a href="../about.html" class="nav__link">About</a>
+        <a href="../contact.html" class="nav__link">Contact</a>
+      </div>
+
+      <div class="nav__cta hide-below-desktop">
+        <a href="../login.html" class="btn btn-ghost">Log in</a>
+        <a href="../early-access.html" class="btn btn-primary btn-sm">Join Early Access</a>
+      </div>
+
+      <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span class="nav__toggle-bar"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== Page Header ========== -->
+  <header class="page-header bg-grid no-print" style="padding-top: calc(72px + var(--space-12)); padding-bottom: var(--space-8);">
+    <div class="container">
+      <span class="badge badge--blue" style="margin-bottom: var(--space-3)">Free Trade Tool</span>
+      <h1>Free Plumbing Invoice Generator</h1>
+      <p style="max-width: 600px; margin: 0 auto; color: var(--text-secondary);">
+        Fill in the details below to generate a professional PDF-ready invoice. Print or copy to send to clients immediately.
+      </p>
+    </div>
+  </header>
+
+  <!-- ========== Main Content ========== -->
+  <main class="section-sm">
+    <div class="container">
+      <div class="split no-print" style="align-items: start; gap: var(--space-8);">
+        <!-- Form -->
+        <div class="card reveal-left" style="box-shadow: var(--shadow-xl);">
+          <h3 style="margin-bottom: var(--space-4);">Invoice Details</h3>
+          <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+            <div class="form-group">
+              <label for="inv-biz" class="form-label">Your Business Name</label>
+              <input type="text" id="inv-biz" class="form-input" placeholder="JD Plumbing Solutions" value="JD Plumbing solutions">
+            </div>
+            <div class="form-group">
+              <label for="inv-client" class="form-label">Client Name</label>
+              <input type="text" id="inv-client" class="form-input" placeholder="Mrs Sarah Smith" value="Mrs Sarah Smith">
+            </div>
+            <div class="form-group">
+              <label for="inv-client-addr" class="form-label">Client Address</label>
+              <input type="text" id="inv-client-addr" class="form-input" placeholder="12 Kingswood Road, Bristol" value="12 Kingswood Road, Bristol">
+            </div>
+            <div class="form-group">
+              <label for="inv-terms" class="form-label">Payment Terms</label>
+              <input type="text" id="inv-terms" class="form-input" value="Payment due within 7 days">
+            </div>
+            <div style="border-top: 1px solid var(--border-default); padding-top: var(--space-4);">
+              <h4 style="margin-bottom: var(--space-3);">Line Items</h4>
+              <div id="items-container" style="display: flex; flex-direction: column; gap: 8px;">
+                <div style="display: flex; gap: 8px;">
+                  <input type="text" class="form-input item-desc" placeholder="Service description" value="Boiler Annual Service" style="flex:2;">
+                  <input type="number" class="form-input item-price" placeholder="Price" value="180" style="flex:1;">
+                </div>
+              </div>
+              <button id="add-item-btn" class="btn btn-secondary btn-sm" style="margin-top: 12px; font-size: 12px;">+ Add Line Item</button>
+            </div>
+            <button id="gen-btn" class="btn btn-primary" style="margin-top: 8px;">Update Preview</button>
+          </div>
+        </div>
+
+        <!-- Preview -->
+        <div class="card-elevated reveal-right" style="padding: var(--space-8); border: 2px solid var(--border-hover);">
+          <div id="invoice-preview" style="font-family: var(--font-body); color: var(--text-primary);">
+            <!-- Dynamic output -->
+          </div>
+          <div style="display: flex; gap: var(--space-3); margin-top: var(--space-6);">
+            <button id="copy-btn" class="btn btn-secondary btn-sm">Copy Invoice Text</button>
+            <button id="print-btn" class="btn btn-accent btn-sm">Print Invoice / PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Print-only block -->
+      <div id="print-only-invoice" style="display: none;"></div>
+    </div>
+  </main>
+
+  <!-- ========== Footer ========== -->
+  <footer class="footer no-print">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="../index.html" class="footer__logo">
+            <div class="nav__logo-icon">E</div>
+            EtaleHub
+          </a>
+          <p class="footer__desc">The AI office manager for plumbing and heating businesses. Spend less time on paperwork. Spend more time earning.</p>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Product</h4>
+          <div class="footer__links">
+            <a href="../product.html" class="footer__link">Product Overview</a>
+            <a href="../ai-office-manager.html" class="footer__link">AI Office Manager</a>
+            <a href="../features.html" class="footer__link">Features</a>
+            <a href="../pricing.html" class="footer__link">Pricing</a>
+            <a href="../ai-demo.html" class="footer__link">AI Demo</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Industries</h4>
+          <div class="footer__links">
+            <a href="../plumbing-heating.html" class="footer__link">Plumbing & Heating</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Company</h4>
+          <div class="footer__links">
+            <a href="../about.html" class="footer__link">About</a>
+            <a href="../contact.html" class="footer__link">Contact</a>
+            <a href="../blog.html" class="footer__link">Blog</a>
+            <a href="../knowledge-base.html" class="footer__link">Knowledge Base</a>
+            <a href="../early-access.html" class="footer__link">Early Access</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <span>© 2025 EtaleHub Ltd. All rights reserved.</span>
+        <div class="footer__bottom-links">
+          <a href="../privacy.html">Privacy Policy</a>
+          <a href="../terms.html">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const itemsContainer = document.getElementById('items-container');
+      const addItemBtn = document.getElementById('add-item-btn');
+      const genBtn = document.getElementById('gen-btn');
+      const preview = document.getElementById('invoice-preview');
+      const copyBtn = document.getElementById('copy-btn');
+      const printBtn = document.getElementById('print-btn');
+
+      addItemBtn.addEventListener('click', () => {
+        const div = document.createElement('div');
+        div.style.display = 'flex';
+        div.style.gap = '8px';
+        div.style.marginTop = '8px';
+        div.innerHTML = `
+          <input type="text" class="form-input item-desc" placeholder="Service description" style="flex:2;">
+          <input type="number" class="form-input item-price" placeholder="Price" style="flex:1;">
+        `;
+        itemsContainer.appendChild(div);
+      });
+
+      function generate() {
+        const bizName = document.getElementById('inv-biz').value || 'My Business';
+        const client = document.getElementById('inv-client').value || 'Client';
+        const addr = document.getElementById('inv-client-addr').value || 'Address';
+        const terms = document.getElementById('inv-terms').value || 'Due on receipt';
+
+        const descs = document.querySelectorAll('.item-desc');
+        const prices = document.querySelectorAll('.item-price');
+
+        let rowsHTML = '';
+        let totalVal = 0;
+
+        for (let i = 0; i < descs.length; i++) {
+          const name = descs[i].value || 'Services rendered';
+          const price = parseFloat(prices[i].value) || 0;
+          rowsHTML += `
+            <tr style="border-bottom: 1px solid var(--border-default);">
+              <td style="padding: 8px 0;">${name}</td>
+              <td style="padding: 8px 0; text-align: right;">£${price.toFixed(2)}</td>
+            </tr>
+          `;
+          totalVal += price;
+        }
+
+        const dateStr = new Date().toLocaleDateString('en-GB');
+
+        const html = `
+          <div style="border-bottom: 2px solid var(--text-primary); padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+              <h2 style="margin: 0; font-family: var(--font-display);">${bizName}</h2>
+              <p style="margin: 4px 0 0; font-size: 12px; color: var(--text-secondary);">Invoice Date: ${dateStr}</p>
+            </div>
+            <h3 style="margin: 0; color: var(--blue-500);">INVOICE</h3>
+          </div>
+          <div style="margin-bottom: 20px; font-size: 13px;">
+            <strong>Bill To:</strong>
+            <p style="margin: 4px 0 0;">${client}</p>
+            <p style="margin: 2px 0 0; color: var(--text-secondary);">${addr}</p>
+          </div>
+          <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--border-default); text-align: left;">
+                <th style="padding-bottom: 6px;">Description</th>
+                <th style="padding-bottom: 6px; text-align: right;">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHTML}
+            </tbody>
+          </table>
+          <div style="margin-top: 16px; text-align: right; font-size: 14px; font-weight: 700;">
+            Total Due: £${totalVal.toFixed(2)}
+          </div>
+          <div style="margin-top: 24px; border-top: 1px dashed var(--border-default); padding-top: 8px; font-size: 12px; color: var(--text-secondary);">
+            <strong>Terms:</strong> ${terms}
+          </div>
+        `;
+        preview.innerHTML = html;
+        document.getElementById('print-only-invoice').innerHTML = html;
+      }
+
+      genBtn.addEventListener('click', generate);
+      generate();
+
+      copyBtn.addEventListener('click', () => {
+        copyToClipboard(preview.innerText, copyBtn);
+      });
+
+      printBtn.addEventListener('click', () => {
+        const printArea = document.getElementById('print-only-invoice');
+        printArea.style.display = 'block';
+        window.print();
+        printArea.style.display = 'none';
+      });
+    });
+  </script>
+</body>
+</html>

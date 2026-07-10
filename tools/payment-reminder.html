@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Payment Reminder Message Generator — EtaleHub</title>
+  <meta name="description" content="Generate polite, firm, and final notice payment reminder templates for outstanding invoices.">
+  <meta name="author" content="EtaleHub">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/design-system.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" href="../css/animations.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%233B82F6'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold' font-size='16'>E</text></svg>">
+</head>
+<body>
+  <!-- ========== Navigation ========== -->
+  <nav class="nav" id="main-nav">
+    <div class="nav__inner">
+      <a href="../index.html" class="nav__logo">
+        <div class="nav__logo-icon">E</div>
+        EtaleHub
+      </a>
+
+      <div class="nav__menu" id="nav-menu">
+        <div class="nav__dropdown">
+          <a href="../product.html" class="nav__link">Product <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-left:4px"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="nav__dropdown-menu">
+            <a href="../ai-office-manager.html" class="nav__dropdown-item">AI Office Manager</a>
+            <a href="../features.html" class="nav__dropdown-item">All Features</a>
+            <a href="../ai-demo.html" class="nav__dropdown-item">Try AI Demo</a>
+          </div>
+        </div>
+        <a href="../pricing.html" class="nav__link">Pricing</a>
+        <a href="../plumbing-heating.html" class="nav__link">Plumbing & Heating</a>
+        <a href="../about.html" class="nav__link">About</a>
+        <a href="../contact.html" class="nav__link">Contact</a>
+      </div>
+
+      <div class="nav__cta hide-below-desktop">
+        <a href="../login.html" class="btn btn-ghost">Log in</a>
+        <a href="../early-access.html" class="btn btn-primary btn-sm">Join Early Access</a>
+      </div>
+
+      <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span class="nav__toggle-bar"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== Page Header ========== -->
+  <header class="page-header bg-grid" style="padding-top: calc(72px + var(--space-12)); padding-bottom: var(--space-8);">
+    <div class="container">
+      <span class="badge badge--blue" style="margin-bottom: var(--space-3)">Free Trade Tool</span>
+      <h1>Free Payment Reminder Generator</h1>
+      <p style="max-width: 600px; margin: 0 auto; color: var(--text-secondary);">
+        Draft customized messages to follow up on overdue bills at varying escalations: polite, firm, or final notice.
+      </p>
+    </div>
+  </header>
+
+  <!-- ========== Main Content ========== -->
+  <main class="section-sm">
+    <div class="container">
+      <div class="split" style="align-items: start; gap: var(--space-8);">
+        <!-- Form -->
+        <div class="card reveal-left" style="box-shadow: var(--shadow-xl);">
+          <h3 style="margin-bottom: var(--space-4);">Reminder Settings</h3>
+          <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+            <div class="form-group">
+              <label for="p-client" class="form-label">Client Name</label>
+              <input type="text" id="p-client" class="form-input" placeholder="Ahmed Khan" value="Ahmed Khan">
+            </div>
+            <div class="form-group">
+              <label for="p-inv" class="form-label">Invoice Number</label>
+              <input type="text" id="p-inv" class="form-input" placeholder="EH-0039" value="EH-0039">
+            </div>
+            <div class="form-group">
+              <label for="p-amount" class="form-label">Amount Owed</label>
+              <input type="number" id="p-amount" class="form-input" placeholder="450" value="450">
+            </div>
+            <div class="form-group">
+              <label for="p-biz" class="form-label">Your Business Name</label>
+              <input type="text" id="p-biz" class="form-input" placeholder="JD Plumbing Solutions" value="JD Plumbing Solutions">
+            </div>
+            <div class="form-group">
+              <label for="p-severity" class="form-label">Escalation Severity</label>
+              <select id="p-severity" class="form-select">
+                <option value="polite">Polite Reminder</option>
+                <option value="firm">Firm Follow-up</option>
+                <option value="final">Final Notice</option>
+              </select>
+            </div>
+            <button id="gen-btn" class="btn btn-primary" style="margin-top: var(--space-2);">Generate Reminder</button>
+          </div>
+        </div>
+
+        <!-- Output Preview -->
+        <div class="card-elevated reveal-right">
+          <h3 style="margin-bottom: var(--space-4);">Output Copy</h3>
+          <div class="tool-output__content" id="p-output" style="min-height: 120px; font-family: monospace; font-size: 13px;">
+            <!-- Output -->
+          </div>
+          <div style="display: flex; gap: var(--space-3); margin-top: var(--space-4);">
+            <button id="copy-btn" class="btn btn-secondary btn-sm">Copy to Clipboard</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========== Footer ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="../index.html" class="footer__logo">
+            <div class="nav__logo-icon">E</div>
+            EtaleHub
+          </a>
+          <p class="footer__desc">The AI office manager for plumbing and heating businesses. Spend less time on paperwork. Spend more time earning.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const genBtn = document.getElementById('gen-btn');
+      const output = document.getElementById('p-output');
+      const copyBtn = document.getElementById('copy-btn');
+
+      function generate() {
+        const name = document.getElementById('p-client').value || 'Client';
+        const inv = document.getElementById('p-inv').value || 'EH-xxxx';
+        const val = parseFloat(document.getElementById('p-amount').value) || 0;
+        const biz = document.getElementById('p-biz').value || 'Our Team';
+        const severity = document.getElementById('p-severity').value;
+
+        let msg = '';
+        if (severity === 'polite') {
+          msg = `Hi ${name},\n\nJust a friendly reminder that invoice #${inv} for £${val.toFixed(2)} is outstanding. \n\nPlease let us know if you need us to resend payment options or if you have any questions.\n\nBest,\n${biz}`;
+        } else if (severity === 'firm') {
+          msg = `Dear ${name},\n\nWe are writing to follow up on invoice #${inv} for £${val.toFixed(2)} which is currently past due.\n\nPlease process this payment at your earliest convenience. If you have already made payment, please disregard this note.\n\nSincerely,\n${biz}`;
+        } else {
+          msg = `URGENT NOTICE:\n\nInvoice #${inv} for £${val.toFixed(2)} is now significantly overdue. \n\nPlease process payment immediately to settle this account. Failure to clear balance may result in additional charges under contract terms.\n\n${biz}`;
+        }
+        output.innerText = msg;
+      }
+
+      genBtn.addEventListener('click', generate);
+      generate();
+
+      copyBtn.addEventListener('click', () => {
+        copyToClipboard(output.innerText, copyBtn);
+      });
+    });
+  </script>
+</body>
+</html>

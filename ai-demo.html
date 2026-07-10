@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Try the AI Command Centre — EtaleHub</title>
+  <meta name="description" content="Try the interactive EtaleHub AI office manager demo. Experience how simple trade business admin can be using natural language commands.">
+  <meta name="keywords" content="AI office manager demo, plumbing admin automation, invoice generator AI, heating engineer app demo">
+  <meta name="author" content="EtaleHub">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/design-system.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%233B82F6'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold' font-size='16'>E</text></svg>">
+</head>
+<body class="demo-page">
+  <!-- ========== Navigation ========== -->
+  <nav class="nav nav-dark" id="main-nav">
+    <div class="nav__inner">
+      <a href="index.html" class="nav__logo">
+        <div class="nav__logo-icon">E</div>
+        EtaleHub
+      </a>
+
+      <div class="nav__menu" id="nav-menu">
+        <div class="nav__dropdown">
+          <a href="product.html" class="nav__link">Product <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-left:4px"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="nav__dropdown-menu">
+            <a href="ai-office-manager.html" class="nav__dropdown-item">AI Office Manager</a>
+            <a href="features.html" class="nav__dropdown-item">All Features</a>
+            <a href="https://app.etalehub.com#/dashboard" class="nav__dropdown-itemActive active">Try AI Demo</a>
+          </div>
+        </div>
+        <a href="pricing.html" class="nav__link">Pricing</a>
+        <a href="plumbing-heating.html" class="nav__link">Plumbing & Heating</a>
+        <a href="about.html" class="nav__link">About</a>
+        <a href="contact.html" class="nav__link">Contact</a>
+      </div>
+
+      <div class="nav__cta hide-below-desktop">
+        <a href="https://app.etalehub.com" class="btn btn-ghost" style="color: var(--slate-300);">Log in</a>
+        <a href="early-access.html" class="btn btn-primary btn-sm">Join Early Access</a>
+      </div>
+
+      <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span class="nav__toggle-bar"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== Page Header ========== -->
+  <header class="page-header page-header-dark" style="padding-top: calc(72px + var(--space-8)); padding-bottom: var(--space-6);">
+    <div class="container">
+      <span class="badge badge--dark" style="margin-bottom: var(--space-3)">Interactive Sandbox</span>
+      <h1 style="color: var(--white);">Try the AI Command Centre</h1>
+      <p style="color: var(--text-on-dark-muted); max-width: 600px; margin: 0 auto;">
+        Type what happened on a job in plain English or click a suggestion below. See how the AI manager coordinates the paperwork.
+      </p>
+    </div>
+  </header>
+
+  <!-- ========== Chat Area ========== -->
+  <main class="section-sm" style="padding-bottom: var(--space-20);">
+    <div class="container">
+      <div class="demo-chat">
+        <div class="demo-panel">
+          <div class="demo-panel__header">
+            <div class="demo-panel__dots">
+              <div class="demo-panel__dot demo-panel__dot--red"></div>
+              <div class="demo-panel__dot demo-panel__dot--yellow"></div>
+              <div class="demo-panel__dot demo-panel__dot--green"></div>
+            </div>
+            <span class="demo-panel__title">EtaleHub Workspace Manager (Demo Sandbox)</span>
+            <div class="pulse-dot" style="margin-left: auto;"></div>
+          </div>
+
+          <div class="demo-panel__body" id="demo-messages" style="overflow-y: auto; max-height: 480px; min-height: 380px;">
+            <!-- Welcome state -->
+            <div class="demo-chat__welcome" id="demo-welcome">
+              <div style="font-size: 48px; margin-bottom: var(--space-4);">💬</div>
+              <h3 style="color: var(--white); margin-bottom: var(--space-2);">Your AI Office Manager is ready</h3>
+              <p style="color: var(--slate-400); max-width: 440px; margin: 0 auto var(--space-8);">
+                Select one of the sample commands below to see how EtaleHub automatically extracts entities and triggers multi-agent workflows.
+              </p>
+
+              <div class="demo-chat__suggestions" id="demo-suggestions">
+                <button class="demo-chat__suggestion" data-command="I finished Mrs Smith's boiler service. She paid £180 by card. Book her annual service.">
+                  <span class="demo-chat__suggestion-icon">🔧</span>
+                  <div>
+                    <strong>"I finished Mrs Smith's boiler..."</strong>
+                    <div style="font-size: 11px; color: var(--slate-500); margin-top: 2px;">Creates job, updates history, drafts receipt, schedules annual reminder.</div>
+                  </div>
+                </button>
+
+                <button class="demo-chat__suggestion" data-command="Draft a quote for replacing two radiators.">
+                  <span class="demo-chat__suggestion-icon">📝</span>
+                  <div>
+                    <strong>"Draft a quote for replacing..."</strong>
+                    <div style="font-size: 11px; color: var(--slate-500); margin-top: 2px;">Looks up templates, outlines parts & labor, schedules a follow-up.</div>
+                  </div>
+                </button>
+
+                <button class="demo-chat__suggestion" data-command="Who has unpaid invoices?">
+                  <span class="demo-chat__suggestion-icon">💰</span>
+                  <div>
+                    <strong>"Who has unpaid invoices?"</strong>
+                    <div style="font-size: 11px; color: var(--slate-500); margin-top: 2px;">Queries the financial records, returns summary, proposes reminders.</div>
+                  </div>
+                </button>
+
+                <button class="demo-chat__suggestion" data-command="Book John for Friday morning.">
+                  <span class="demo-chat__suggestion-icon">📅</span>
+                  <div>
+                    <strong>"Book John for Friday morning."</strong>
+                    <div style="font-size: 11px; color: var(--slate-500); margin-top: 2px;">Checks calendar conflicts, reserves 9am-12pm slot, drafts confirmation.</div>
+                  </div>
+                </button>
+
+                <button class="demo-chat__suggestion" data-command="Send a polite payment reminder to Ahmed.">
+                  <span class="demo-chat__suggestion-icon">✉️</span>
+                  <div>
+                    <strong>"Send a polite payment reminder..."</strong>
+                    <div style="font-size: 11px; color: var(--slate-500); margin-top: 2px;">Locates overdue invoice, drafts SMS/email template, requests send approval.</div>
+                  </div>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="demo-panel__input-area" style="margin: 0 var(--space-6) var(--space-6);">
+            <input type="text" class="demo-panel__input" id="demo-input" placeholder="Type a message or command (e.g. 'I finished servicing the boiler for John...')" aria-label="Command line input">
+            <button class="demo-panel__send" id="demo-send" aria-label="Submit command to AI">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========== Footer ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="index.html" class="footer__logo">
+            <div class="nav__logo-icon">E</div>
+            EtaleHub
+          </a>
+          <p class="footer__desc">The AI office manager for plumbing and heating businesses. Spend less time on paperwork. Spend more time earning.</p>
+          <div class="footer__social">
+            <a href="#" class="footer__social-link" aria-label="Twitter">𝕏</a>
+            <a href="#" class="footer__social-link" aria-label="LinkedIn">in</a>
+            <a href="#" class="footer__social-link" aria-label="Facebook">f</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Product</h4>
+          <div class="footer__links">
+            <a href="product.html" class="footer__link">Product Overview</a>
+            <a href="ai-office-manager.html" class="footer__link">AI Office Manager</a>
+            <a href="features.html" class="footer__link">Features</a>
+            <a href="pricing.html" class="footer__link">Pricing</a>
+            <a href="https://app.etalehub.com#/dashboard" class="footer__link">AI Demo</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Industries</h4>
+          <div class="footer__links">
+            <a href="plumbing-heating.html" class="footer__link">Plumbing & Heating</a>
+            <a href="seo/ai-software-plumbers.html" class="footer__link">AI for Plumbers</a>
+            <a href="seo/plumbing-invoice-software.html" class="footer__link">Invoice Software</a>
+            <a href="seo/plumbing-quote-software.html" class="footer__link">Quote Software</a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer__heading">Company</h4>
+          <div class="footer__links">
+            <a href="about.html" class="footer__link">About</a>
+            <a href="contact.html" class="footer__link">Contact</a>
+            <a href="blog.html" class="footer__link">Blog</a>
+            <a href="knowledge-base.html" class="footer__link">Knowledge Base</a>
+            <a href="early-access.html" class="footer__link">Early Access</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <span>© 2025 EtaleHub Ltd. All rights reserved.</span>
+        <div class="footer__bottom-links">
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="terms.html">Terms of Service</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/main.js"></script>
+  <script src="js/ai-demo.js"></script>
+</body>
+</html>

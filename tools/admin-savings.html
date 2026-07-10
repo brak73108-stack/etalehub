@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Admin Time Savings Calculator — EtaleHub</title>
+  <meta name="description" content="Calculate how much time and money you can save by automating invoices and reminders.">
+  <meta name="author" content="EtaleHub">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="../css/design-system.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" href="../css/animations.css">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%233B82F6'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='white' font-family='sans-serif' font-weight='bold' font-size='16'>E</text></svg>">
+</head>
+<body>
+  <!-- ========== Navigation ========== -->
+  <nav class="nav" id="main-nav">
+    <div class="nav__inner">
+      <a href="../index.html" class="nav__logo">
+        <div class="nav__logo-icon">E</div>
+        EtaleHub
+      </a>
+
+      <div class="nav__menu" id="nav-menu">
+        <div class="nav__dropdown">
+          <a href="../product.html" class="nav__link">Product <svg width="12" height="12" viewBox="0 0 12 12" fill="none" style="margin-left:4px"><path d="M3 5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+          <div class="nav__dropdown-menu">
+            <a href="../ai-office-manager.html" class="nav__dropdown-item">AI Office Manager</a>
+            <a href="../features.html" class="nav__dropdown-item">All Features</a>
+            <a href="../ai-demo.html" class="nav__dropdown-item">Try AI Demo</a>
+          </div>
+        </div>
+        <a href="../pricing.html" class="nav__link">Pricing</a>
+        <a href="../plumbing-heating.html" class="nav__link">Plumbing & Heating</a>
+        <a href="../about.html" class="nav__link">About</a>
+        <a href="../contact.html" class="nav__link">Contact</a>
+      </div>
+
+      <div class="nav__cta hide-below-desktop">
+        <a href="../login.html" class="btn btn-ghost">Log in</a>
+        <a href="../early-access.html" class="btn btn-primary btn-sm">Join Early Access</a>
+      </div>
+
+      <button class="nav__toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span class="nav__toggle-bar"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ========== Page Header ========== -->
+  <header class="page-header bg-grid" style="padding-top: calc(72px + var(--space-12)); padding-bottom: var(--space-8);">
+    <div class="container">
+      <span class="badge badge--blue" style="margin-bottom: var(--space-3)">Free Trade Tool</span>
+      <h1>Admin Time Savings Calculator</h1>
+      <p style="max-width: 600px; margin: 0 auto; color: var(--text-secondary);">
+        Determine how many hours you lose to invoicing, scheduling, follow-ups, and payment chasing.
+      </p>
+    </div>
+  </header>
+
+  <!-- ========== Main Content ========== -->
+  <main class="section-sm">
+    <div class="container">
+      <div class="split" style="align-items: start; gap: var(--space-8);">
+        <!-- Form -->
+        <div class="card reveal-left" style="box-shadow: var(--shadow-xl);">
+          <h3 style="margin-bottom: var(--space-4);">Weekly Overhead</h3>
+          <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+            <div class="form-group">
+              <label for="s-jobs" class="form-label">Jobs completed per week</label>
+              <input type="number" id="s-jobs" class="form-input" placeholder="15" value="15">
+            </div>
+            <div class="form-group">
+              <label for="s-inv" class="form-label">Minutes invoicing (per job)</label>
+              <input type="number" id="s-inv" class="form-input" placeholder="10" value="10">
+            </div>
+            <div class="form-group">
+              <label for="s-recs" class="form-label">Minutes tracking/updating records (per job)</label>
+              <input type="number" id="s-recs" class="form-input" placeholder="5" value="5">
+            </div>
+            <div class="form-group">
+              <label for="s-follow" class="form-label">Minutes chasing quote follow-ups (per week)</label>
+              <input type="number" id="s-follow" class="form-input" placeholder="60" value="60">
+            </div>
+            <div class="form-group">
+              <label for="s-chase" class="form-label">Minutes chasing overdue invoices (per week)</label>
+              <input type="number" id="s-chase" class="form-input" placeholder="90" value="90">
+            </div>
+            <div class="form-group">
+              <label for="s-rate" class="form-label">Your target billing rate (£/hour)</label>
+              <input type="number" id="s-rate" class="form-input" placeholder="50" value="50">
+            </div>
+            <button id="calc-btn" class="btn btn-primary" style="margin-top: var(--space-2);">Evaluate Savings</button>
+          </div>
+        </div>
+
+        <!-- Output Preview -->
+        <div class="card-elevated reveal-right">
+          <h3 style="margin-bottom: var(--space-4);">Savings Summary</h3>
+          <div class="tool-output__content" id="savings-output" style="min-height: 180px; font-family: monospace; font-size: 13px;">
+            <!-- Output -->
+          </div>
+          <div style="margin-top: var(--space-6);">
+            <a href="../early-access.html" class="btn btn-accent btn-full">Automate with EtaleHub</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ========== Footer ========== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="../index.html" class="footer__logo">
+            <div class="nav__logo-icon">E</div>
+            EtaleHub
+          </a>
+          <p class="footer__desc">The AI office manager for plumbing and heating businesses. Spend less time on paperwork. Spend more time earning.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="../js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const calcBtn = document.getElementById('calc-btn');
+      const output = document.getElementById('savings-output');
+
+      function calculate() {
+        const jobs = parseFloat(document.getElementById('s-jobs').value) || 0;
+        const inv = parseFloat(document.getElementById('s-inv').value) || 0;
+        const recs = parseFloat(document.getElementById('s-recs').value) || 0;
+        const follow = parseFloat(document.getElementById('s-follow').value) || 0;
+        const chase = parseFloat(document.getElementById('s-chase').value) || 0;
+        const rate = parseFloat(document.getElementById('s-rate').value) || 0;
+
+        const jobAdminMin = jobs * (inv + recs);
+        const weeklyAdminMin = jobAdminMin + follow + chase;
+        const weeklyAdminHours = weeklyAdminMin / 60;
+
+        // Assuming EtaleHub cuts admin time by 80%
+        const savedWeeklyHours = weeklyAdminHours * 0.8;
+        const savedMonthlyHours = savedWeeklyHours * 4.33;
+        const savedYearlyHours = savedWeeklyHours * 52;
+
+        const savedWeeklyMoney = savedWeeklyHours * rate;
+        const savedMonthlyMoney = savedMonthlyHours * rate;
+        const savedYearlyMoney = savedYearlyHours * rate;
+
+        const text = `
+-----------------------------------------
+          SAVINGS SUMMARY
+-----------------------------------------
+Current Weekly Admin:   ${weeklyAdminHours.toFixed(1)} hours
+Time Saved (Weekly):    ${savedWeeklyHours.toFixed(1)} hours (80% cut)
+Time Saved (Yearly):    ${savedYearlyHours.toFixed(0)} hours
+
+Hourly Earning Rate:    £${rate.toFixed(2)}/hr
+
+Earning Value Regained:
+  - Weekly:             £${savedWeeklyMoney.toFixed(2)}
+  - Monthly:            £${savedMonthlyMoney.toFixed(2)}
+  - Yearly:             £${savedYearlyMoney.toFixed(2)}
+-----------------------------------------
+        `;
+        output.innerText = text;
+      }
+
+      calcBtn.addEventListener('click', calculate);
+      calculate();
+    });
+  </script>
+</body>
+</html>
