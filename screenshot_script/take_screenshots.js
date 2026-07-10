@@ -14,54 +14,73 @@ async function run() {
     const page = await browser.newPage();
     await page.setViewport({ width: 1280, height: 800 });
 
-    console.log('Taking homepage screenshot...');
-    await page.goto('https://etalehub.com', { waitUntil: 'networkidle0' });
-    await page.screenshot({ path: path.join(outDir, 'homepage.png') });
+    // 1. Signup/login screen
+    console.log('Taking login screen screenshot...');
+    await page.goto('http://localhost:4173#/login', { waitUntil: 'networkidle0' });
+    await delay(2000);
+    await page.screenshot({ path: path.join(outDir, '01_login_screen.png') });
 
-    console.log('Taking dashboard screenshot...');
-    await page.goto('https://app.etalehub.com#/dashboard', { waitUntil: 'networkidle0' });
-    await delay(1000);
-    await page.screenshot({ path: path.join(outDir, 'dashboard.png') });
-
-    console.log('Taking command centre before screenshot...');
-    await page.goto('https://app.etalehub.com#/command', { waitUntil: 'networkidle0' });
-    await page.waitForSelector('#chatInput', { timeout: 10000 });
-    await delay(1000);
-    await page.screenshot({ path: path.join(outDir, 'command_centre_before.png') });
-
-    console.log('Running Mrs Smith workflow...');
-    await page.type('#chatInput', 'I finished Mrs Smith’s boiler service. She paid £180 by card. Book her annual service.');
-    await page.click('#chatSubmitBtn');
+    // Do login
+    console.log('Logging in...');
+    await page.waitForSelector('#email', { timeout: 10000 });
+    await page.type('#email', 'NGENYABRAHAM57@GMAIL.COM');
+    await page.type('#password', 'ngeny@92A');
+    await page.click('#loginBtn');
     
-    // Wait for AI to finish (assuming it takes a few seconds)
+    // Wait for redirect to happen
+    await delay(4000);
+    
+    // 2. Business workspace onboarding
+    // Navigate explicitly to onboarding to show the screen
+    console.log('Checking onboarding...');
+    await page.goto('http://localhost:4173#/onboarding', { waitUntil: 'networkidle0' });
+    await delay(2000);
+    await page.screenshot({ path: path.join(outDir, '02_onboarding.png') });
+    
+    try {
+       // Attempt to fill onboarding if the user has no business yet
+       await page.type('#businessName', 'Abraham Plumbing Co');
+       await page.click('#onboardingBtn');
+       await delay(3000);
+    } catch (e) {
+       console.log('Onboarding skipped or already completed.');
+    }
+
+    // 3. Production dashboard
+    console.log('Taking production dashboard screenshot...');
+    await page.goto('http://localhost:4173#/dashboard', { waitUntil: 'networkidle0' });
+    await delay(2000);
+    await page.screenshot({ path: path.join(outDir, '03_production_dashboard.png') });
+
+    // 4. Empty production views (Jobs)
+    console.log('Taking empty production views screenshot...');
+    await page.goto('http://localhost:4173#/jobs', { waitUntil: 'networkidle0' });
+    await delay(2000);
+    await page.screenshot({ path: path.join(outDir, '04_empty_production_jobs.png') });
+
+    // 5. Settings showing Production Mode
+    console.log('Taking settings production mode screenshot...');
+    await page.goto('http://localhost:4173#/settings', { waitUntil: 'networkidle0' });
+    await delay(2000);
+    await page.screenshot({ path: path.join(outDir, '05_settings_production_mode.png') });
+
+    // 6. Demo mode still working logged out
+    console.log('Logging out...');
+    await page.evaluate(() => {
+        if (window.handleLogout) {
+            window.handleLogout();
+        } else {
+            // fallback if function isn't bound for some reason
+            localStorage.clear();
+            sessionStorage.clear();
+        }
+    });
     await delay(3000);
-    console.log('Taking command centre after screenshot...');
-    await page.screenshot({ path: path.join(outDir, 'command_centre_after.png') });
-
-    console.log('Taking jobs view screenshot...');
-    await page.goto('https://app.etalehub.com#/jobs', { waitUntil: 'networkidle0' });
-    await delay(1000);
-    await page.screenshot({ path: path.join(outDir, 'jobs_view.png') });
-
-    console.log('Taking customers view screenshot...');
-    await page.goto('https://app.etalehub.com#/customers', { waitUntil: 'networkidle0' });
-    await delay(1000);
-    await page.screenshot({ path: path.join(outDir, 'customers_view.png') });
-
-    console.log('Taking money view screenshot...');
-    await page.goto('https://app.etalehub.com#/money', { waitUntil: 'networkidle0' });
-    await delay(1000);
-    await page.screenshot({ path: path.join(outDir, 'money_view.png') });
-
-    console.log('Taking calendar view screenshot...');
-    await page.goto('https://app.etalehub.com#/calendar', { waitUntil: 'networkidle0' });
-    await delay(1000);
-    await page.screenshot({ path: path.join(outDir, 'calendar_view.png') });
-
-    console.log('Taking settings view screenshot...');
-    await page.goto('https://app.etalehub.com#/settings', { waitUntil: 'networkidle0' });
-    await delay(1000);
-    await page.screenshot({ path: path.join(outDir, 'settings_view.png') });
+    
+    console.log('Taking demo mode dashboard screenshot...');
+    await page.goto('http://localhost:4173#/dashboard', { waitUntil: 'networkidle0' });
+    await delay(2000);
+    await page.screenshot({ path: path.join(outDir, '06_demo_mode_dashboard.png') });
 
     await browser.close();
     console.log('Done.');

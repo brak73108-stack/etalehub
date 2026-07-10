@@ -17,18 +17,27 @@ export async function parseCommand(inputText) {
       const { create } = await import('../services/data/ai-actions-service.js');
       await create({
         inputText,
-        interpretedIntent: Array.isArray(result.intent) ? result.intent.join(', ') : result.intent,
+        interpretedIntent: result.intents.join(', '),
         extractedEntities: result.entities,
-        proposedActions: result.actions,
-        executedActions: [], // Will be updated later in the pipeline
+        proposedActions: [{ type: result.suggestedWorkflow, description: result.explanation, safe: result.safeToExecute }],
+        executedActions: [],
         confidenceScore: result.confidence,
-        riskLevel: result.actions.some(a => !a.safe) ? 'high' : 'low'
+        riskLevel: result.riskLevel
       });
     } catch (e) {
       console.warn('[CommandParser] Could not log to aiActions store:', e);
     }
     
-    return result;
+    // Provide backwards compatibility structure for the agent-router
+    return {
+      originalText: inputText,
+      intent: result.intents,
+      entities: result.entities,
+      confidence: result.confidence,
+      riskLevel: result.riskLevel,
+      requiresApproval: result.requiresApproval,
+      actions: [{ type: result.suggestedWorkflow, description: result.explanation, safe: result.safeToExecute, data: result.entities }]
+    };
   } catch (error) {
     console.error('[CommandParser] Error parsing command:', error);
     throw new Error('Failed to parse command. Please try again.');
