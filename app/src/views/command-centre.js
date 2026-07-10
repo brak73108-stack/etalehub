@@ -5,7 +5,7 @@
 
 import { parseCommand } from '../ai/command-parser.js';
 import { routeCommand } from '../ai/agent-router.js';
-import { approve as approveAction, reject as rejectAction } from '../db/approvals.js';
+import { approve as approveAction, reject as rejectAction } from '../services/data/approvals-service.js';
 import { addToast } from '../store.js';
 
 let isProcessing = false;

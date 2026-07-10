@@ -3,8 +3,8 @@
  * Manages future follow-ups and annual service reminders.
  */
 
-import { create } from '../../db/reminders.js';
-import { create as createAudit } from '../../db/audit.js';
+import { create } from '../../services/data/reminders-service.js';
+import { create as createAudit } from '../../services/data/audit-service.js';
 
 export async function execute({ action, ctx }) {
   if (action === 'annual_service') {
@@ -15,7 +15,7 @@ export async function execute({ action, ctx }) {
     scheduledDate.setMonth(scheduledDate.getMonth() + offsetMonths);
     
     // Duplicate Protection: Check if an annual reminder already exists for roughly this time
-    const { getByCustomerId } = await import('../../db/reminders.js');
+    const { getByCustomerId } = await import('../../services/data/reminders-service.js');
     const existingReminders = await getByCustomerId(customer.id);
     const duplicate = existingReminders.find(r => 
       r.type === 'annual_service' && 

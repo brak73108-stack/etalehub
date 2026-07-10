@@ -4,8 +4,8 @@
  * Routes dangerous actions to the Approval Queue.
  */
 
-import { create as createApproval } from '../../db/approvals.js';
-import { create as createAudit } from '../../db/audit.js';
+import { create as createApproval } from '../../services/data/approvals-service.js';
+import { create as createAudit } from '../../services/data/audit-service.js';
 
 export async function evaluate(officeResult) {
   const executed = [...(officeResult.executed || [])];

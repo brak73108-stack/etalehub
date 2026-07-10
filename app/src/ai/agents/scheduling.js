@@ -3,8 +3,8 @@
  * Handles jobs, appointments, and service records.
  */
 
-import { getByCustomerId, update } from '../../db/jobs.js';
-import { create as createAudit } from '../../db/audit.js';
+import { getByCustomerId, update } from '../../services/data/jobs-service.js';
+import { create as createAudit } from '../../services/data/audit-service.js';
 
 export async function execute({ action, ctx }) {
   if (action === 'complete_job') {

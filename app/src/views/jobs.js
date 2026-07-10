@@ -3,16 +3,19 @@
  * Polished view for active and past jobs, highlighting AI-updated status and history.
  */
 
-import { getAll as getAllJobs, getById as getJobById, update as updateJob } from '../db/jobs.js';
-import { getById as getCustomerById, getAll as getAllCustomers } from '../db/customers.js';
-import { getByEntity as getAuditLogs } from '../db/audit.js';
+import { getAll as getAllJobs, getById as getJobById, update as updateJob } from '../services/data/jobs-service.js';
+import { getById as getCustomerById, getAll as getAllCustomers } from '../services/data/customers-service.js';
+import { getAll as getAllAuditLogs } from '../services/data/audit-service.js';
+import { getAll as getAllInvoices } from '../services/data/invoices-service.js';
+import { getAll as getAllReminders } from '../services/data/reminders-service.js';
+import { isDemoMode } from '../services/mode-service.js';
 
 let currentJobs = [];
 let customerMap = {};
 
 export default async function renderJobs() {
-  const jobs = await getAllJobs();
-  const customers = await getAllCustomers();
+  const jobs = await getAllJobs() || [];
+  const customers = await getAllCustomers() || [];
   customerMap = customers.reduce((acc, c) => { acc[c.id] = c; return acc; }, {});
   
   // Sort by newest first
@@ -27,8 +30,19 @@ export default async function renderJobs() {
   
   window.viewJobDetails = async (id) => {
     const job = await getJobById(Number(id));
-    const cust = customerMap[job.customerId];
-    const auditLogs = await getAuditLogs('job', job.id);
+    if (!job) return;
+    
+    const cust = customerMap[job.customerId] || { name: 'Unknown Customer', address: 'Address not available' };
+    
+    // Services proxy abstraction: fetch all and filter client side for these related items
+    const allAudit = await getAllAuditLogs() || [];
+    const auditLogs = allAudit.filter(log => log.entityType === 'job' && log.entityId === job.id);
+    
+    const allInvoices = await getAllInvoices() || [];
+    const linkedInvoice = allInvoices.find(i => i.jobId === job.id);
+    
+    const allReminders = await getAllReminders() || [];
+    const linkedReminder = allReminders.find(r => r.jobId === job.id);
     
     const isAiUpdated = auditLogs.some(log => log.source === 'ai');
     
@@ -38,7 +52,7 @@ export default async function renderJobs() {
           <strong style="color:var(--accent-${log.source==='ai'?'teal':'purple'})">${log.source === 'ai' ? '🤖 Done by AI' : '👤 User Action'}</strong>
           <span class="text-muted">${new Date(log.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
         </div>
-        <div style="color:var(--text-color)">${log.details.message}</div>
+        <div style="color:var(--text-color)">${log.details?.message || log.action || 'Updated record'}</div>
       </div>
     `).join('');
 
@@ -49,10 +63,10 @@ export default async function renderJobs() {
           <div style="display:flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
             <div>
               <div style="display:flex; align-items:center; gap: 0.5rem; margin-bottom: 0.5rem;">
-                <h2 style="margin:0; font-size: 1.5rem;">${job.title}</h2>
+                <h2 style="margin:0; font-size: 1.5rem;">${job.title || 'Untitled Job'}</h2>
                 ${isAiUpdated ? '<span class="badge badge-info" title="This record was updated by the AI Office Manager">🤖 AI Updated</span>' : ''}
               </div>
-              <p class="text-muted m-0">${job.jobType.replace('_', ' ')}</p>
+              <p class="text-muted m-0">${(job.jobType || 'General').replace('_', ' ')}</p>
             </div>
             <button onclick="document.getElementById('jobModal').remove()" class="btn btn-ghost" style="font-size:1.2rem; padding: 0.25rem 0.5rem;">✕</button>
           </div>
@@ -63,10 +77,10 @@ export default async function renderJobs() {
               <div class="font-medium mb-3"><a href="#/customers/${cust.id}" class="text-accent" onclick="document.getElementById('jobModal').remove()">${cust.name}</a></div>
               
               <div class="text-sm text-muted mb-1">Address</div>
-              <div class="font-medium mb-3">${cust.address}</div>
+              <div class="font-medium mb-3">${cust.address || 'No address provided'}</div>
               
               <div class="text-sm text-muted mb-1">Status</div>
-              <div class="font-medium"><span class="badge badge-${job.status === 'complete' ? 'success' : 'warning'}">${job.status.toUpperCase()}</span></div>
+              <div class="font-medium"><span class="badge badge-${job.status === 'complete' ? 'success' : 'warning'}">${(job.status || 'pending').toUpperCase()}</span></div>
             </div>
             <div>
               <div class="text-sm text-muted mb-1">Schedule</div>
@@ -78,8 +92,35 @@ export default async function renderJobs() {
               <div class="text-sm text-muted mb-1">Final Price & Payment</div>
               <div class="font-medium" style="display:flex; align-items:center; gap:0.5rem;">
                 <span style="font-size: 1.1rem;">${job.finalPrice ? `£${job.finalPrice}` : 'TBD'}</span>
-                <span class="badge badge-${job.paymentStatus === 'paid' ? 'success' : 'default'}">${job.paymentStatus.toUpperCase()}</span>
+                <span class="badge badge-${job.paymentStatus === 'paid' ? 'success' : 'default'}">${(job.paymentStatus || 'unpaid').toUpperCase()}</span>
               </div>
+            </div>
+          </div>
+          
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+            <div>
+              <h4 style="margin-bottom: 0.5rem; font-size: 0.9rem; color:var(--text-muted);">Linked Invoice</h4>
+              ${linkedInvoice ? `
+                <div style="padding: 0.75rem; background: var(--bg-primary); border-radius: 4px; border: 1px solid var(--border-color);">
+                  <div style="display:flex; justify-content:space-between; margin-bottom: 0.25rem;">
+                    <span class="font-medium">${linkedInvoice.invoiceNumber || 'Draft'}</span>
+                    <span class="badge badge-${linkedInvoice.status === 'paid' ? 'success' : 'warning'}">${linkedInvoice.status}</span>
+                  </div>
+                  <div class="text-muted text-sm">Total: £${linkedInvoice.total || 0}</div>
+                </div>
+              ` : '<div class="text-muted text-sm" style="padding: 0.75rem; background: var(--bg-primary); border-radius: 4px;">No invoice linked yet</div>'}
+            </div>
+            <div>
+              <h4 style="margin-bottom: 0.5rem; font-size: 0.9rem; color:var(--text-muted);">Linked Reminder</h4>
+              ${linkedReminder ? `
+                <div style="padding: 0.75rem; background: var(--bg-primary); border-radius: 4px; border: 1px solid var(--border-color);">
+                  <div style="display:flex; justify-content:space-between; margin-bottom: 0.25rem;">
+                    <span class="font-medium">${(linkedReminder.reminderType || linkedReminder.type || 'Reminder').replace('_', ' ')}</span>
+                    <span class="badge badge-${linkedReminder.status === 'pending' ? 'warning' : 'success'}">${linkedReminder.status}</span>
+                  </div>
+                  <div class="text-muted text-sm">${new Date(linkedReminder.scheduledDate).toLocaleDateString()}</div>
+                </div>
+              ` : '<div class="text-muted text-sm" style="padding: 0.75rem; background: var(--bg-primary); border-radius: 4px;">No reminder linked yet</div>'}
             </div>
           </div>
           
@@ -92,12 +133,16 @@ export default async function renderJobs() {
           
           <h4 style="margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem;">Audit Trail</h4>
           <div style="margin-bottom: 2rem; max-height: 250px; overflow-y: auto; padding-right: 0.5rem;">
-            ${auditHtml || '<div class="text-muted" style="text-align:center; padding: 2rem;">No audit logs</div>'}
+            ${auditHtml || '<div class="text-muted" style="text-align:center; padding: 2rem;">No audit activity yet</div>'}
           </div>
           
-          <div style="display:flex; gap: 0.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
-            <button class="btn btn-primary" onclick="window.location.hash='#/command'; setTimeout(() => document.getElementById('commandInput').value='Mark job ${job.id} as complete', 100); document.getElementById('jobModal').remove()">Mark Complete via AI</button>
-            <button class="btn btn-ghost" onclick="window.location.hash='#/command'; setTimeout(() => document.getElementById('commandInput').value='Draft invoice for job ${job.id}', 100); document.getElementById('jobModal').remove()">Draft Invoice</button>
+          <div style="display:flex; gap: 0.75rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); align-items:center;">
+            ${isDemoMode() ? `
+              <button class="btn btn-primary" onclick="window.location.hash='#/command'; setTimeout(() => document.getElementById('commandInput').value='Mark job ${job.id} as complete', 100); document.getElementById('jobModal').remove()">Mark Complete via AI</button>
+              <button class="btn btn-ghost" onclick="window.location.hash='#/command'; setTimeout(() => document.getElementById('commandInput').value='Draft invoice for job ${job.id}', 100); document.getElementById('jobModal').remove()">Draft Invoice</button>
+            ` : `
+              <span class="text-muted text-sm">Quick actions coming soon for production workspaces.</span>
+            `}
           </div>
         </div>
       </div>
@@ -200,26 +245,26 @@ function renderJobRows(jobs) {
   };
 
   tbody.innerHTML = jobs.map(j => {
-    const cust = customerMap[j.customerId];
+    const cust = customerMap[j.customerId] || { name: 'Unknown Customer', address: '' };
     return `
       <tr class="table-row" onclick="viewJobDetails(${j.id})" style="cursor:pointer; transition: background 0.2s;">
         <td style="padding-left: 1.5rem;">
-          <div class="font-medium" style="font-size: 1.05rem; margin-bottom: 0.25rem;">${j.title}</div>
+          <div class="font-medium" style="font-size: 1.05rem; margin-bottom: 0.25rem;">${j.title || 'Untitled Job'}</div>
           <div class="text-muted text-sm" style="display:flex; align-items:center; gap:0.5rem;">
-            ${j.jobType.replace('_', ' ')}
+            ${(j.jobType || 'General').replace('_', ' ')}
             ${j.followUpRequired ? '<span class="badge badge-warning" style="font-size:0.7rem; padding:0.1rem 0.4rem;">Follow-up due</span>' : ''}
           </div>
         </td>
         <td>
-          <span class="text-accent font-medium">${cust ? cust.name : 'Unknown'}</span>
-          <div class="text-muted text-sm mt-1">${cust ? cust.address.split(',')[0] : ''}</div>
+          <span class="text-accent font-medium">${cust.name}</span>
+          <div class="text-muted text-sm mt-1">${cust.address ? cust.address.split(',')[0] : ''}</div>
         </td>
         <td>
-          <span class="badge badge-${statusColors[j.status] || 'default'}">${j.status.toUpperCase()}</span>
+          <span class="badge badge-${statusColors[j.status] || 'default'}">${(j.status || 'pending').toUpperCase()}</span>
         </td>
         <td>
           <div class="font-medium" style="font-size:1.1rem; margin-bottom:0.25rem;">${j.finalPrice ? `£${j.finalPrice}` : 'TBD'}</div>
-          ${j.status === 'complete' ? `<span class="badge badge-${j.paymentStatus === 'paid' ? 'success' : 'default'}">${j.paymentStatus.toUpperCase()}</span>` : '<span class="text-muted text-sm">-</span>'}
+          ${j.status === 'complete' ? `<span class="badge badge-${j.paymentStatus === 'paid' ? 'success' : 'default'}">${(j.paymentStatus || 'unpaid').toUpperCase()}</span>` : '<span class="text-muted text-sm">-</span>'}
         </td>
         <td>
           <div class="text-sm" style="margin-bottom:0.25rem;"><span class="text-muted">Sch:</span> ${j.scheduledDate ? new Date(j.scheduledDate).toLocaleDateString(undefined, {month:'short', day:'numeric'}) : '-'}</div>
@@ -231,8 +276,8 @@ function renderJobRows(jobs) {
     <tr>
       <td colspan="5" class="text-center" style="padding: 4rem 2rem;">
         <div style="font-size: 3rem; margin-bottom: 1rem;">📭</div>
-        <h3 class="text-muted">No jobs found</h3>
-        <p class="text-muted">Try asking EtaleHub to create one.</p>
+        <h3 class="text-muted">No jobs yet.</h3>
+        <p class="text-muted">Create your first job or ask EtaleHub to help.</p>
         <button class="btn btn-ghost mt-2" onclick="window.location.hash='#/command'">Go to Ask EtaleHub</button>
       </td>
     </tr>

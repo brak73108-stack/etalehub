@@ -3,8 +3,8 @@
  * Handles money, receipts, and invoices.
  */
 
-import { create, getNextInvoiceNumber } from '../../db/invoices.js';
-import { create as createAudit } from '../../db/audit.js';
+import { create, getNextInvoiceNumber } from '../../services/data/invoices-service.js';
+import { create as createAudit } from '../../services/data/audit-service.js';
 
 export async function execute({ action, ctx }) {
   if (action === 'record_payment') {
@@ -12,7 +12,7 @@ export async function execute({ action, ctx }) {
     
     // Duplicate Protection: Check if this job already has a paid invoice
     if (job) {
-      const { getByCustomerId } = await import('../../db/invoices.js');
+      const { getByCustomerId } = await import('../../services/data/invoices-service.js');
       const existingInvoices = await getByCustomerId(customer.id);
       const duplicate = existingInvoices.find(i => i.jobId === job.id && i.status === 'paid' && i.total === entities.amount);
       if (duplicate) {

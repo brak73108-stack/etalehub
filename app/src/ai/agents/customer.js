@@ -3,8 +3,8 @@
  * Handles finding customers, updating their history, and managing profiles.
  */
 
-import { getAll, update } from '../../db/customers.js';
-import { create as createAudit } from '../../db/audit.js';
+import { getAll, update } from '../../services/data/customers-service.js';
+import { create as createAudit } from '../../services/data/audit-service.js';
 
 export async function execute({ action, entities, ctx }) {
   if (action === 'find_customer') {

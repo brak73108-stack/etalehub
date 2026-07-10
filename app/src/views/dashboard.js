@@ -3,29 +3,55 @@
  * The main daily command centre with morning briefing and priority actions.
  */
 
-import { getAll as getAllJobs } from '../db/jobs.js';
-import { getAll as getAllInvoices } from '../db/invoices.js';
-import { getPending as getPendingApprovals } from '../db/approvals.js';
-import { getDue as getDueReminders } from '../db/reminders.js';
-import { getRecent as getRecentAiActions } from '../db/ai-actions.js';
+import { isDemoMode } from '../services/mode-service.js';
+import { getAll as getAllJobs } from '../services/data/jobs-service.js';
+import { getAll as getAllInvoices } from '../services/data/invoices-service.js';
+import { getPending as getPendingApprovals } from '../services/data/approvals-service.js';
+import { getAll as getAllReminders } from '../services/data/reminders-service.js';
+import { getAll as getAllAiActions } from '../services/data/ai-actions-service.js';
 
 export default async function renderDashboard() {
-  const jobs = await getAllJobs();
-  const invoices = await getAllInvoices();
-  const approvals = await getPendingApprovals();
-  const reminders = await getDueReminders();
-  const aiActions = await getRecentAiActions(5);
+  const jobs = await getAllJobs() || [];
+  const invoices = await getAllInvoices() || [];
+  const approvals = await getPendingApprovals() || [];
   
+  // reminders-service.js getAll maps to db.getAll() which we then need to filter if we only want 'due'
+  // But wait, in Phase 2 it was getDue(). Let's check how the proxy was made.
+  // I created `import { getProvider } from './data-provider.js'; export async function getAll() { return getProvider().getReminders(); }`
+  // So I'll fetch all and filter client-side for safety/simplicity here, or just grab the first few.
+  const allReminders = await getAllReminders() || [];
   const todayStr = new Date().toISOString().split('T')[0];
+  const reminders = allReminders.filter(r => r.scheduledDate && r.scheduledDate.startsWith(todayStr) && r.status === 'pending');
+  
+  const aiActionsAll = await getAllAiActions() || [];
+  const aiActions = aiActionsAll.slice(0, 5); // getRecent(5)
   
   const todayJobs = jobs.filter(j => j.scheduledDate && j.scheduledDate.startsWith(todayStr));
-  const expectedRevenue = todayJobs.reduce((sum, j) => sum + (j.finalPrice || 0), 0) || 540; // fallback for demo if none set
+  const expectedRevenue = todayJobs.reduce((sum, j) => sum + (j.finalPrice || 0), 0) || (isDemoMode() ? 540 : 0); 
   const overdueInvoices = invoices.filter(i => i.status === 'overdue');
   
   const aiCompletedJobs = jobs.filter(j => j.status === 'complete' && j.serviceHistoryNote && j.serviceHistoryNote.includes('AI workflow'));
   const paidThisMonth = invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + i.total, 0);
   
   const suggestedCommand = "I finished Mrs Smith’s boiler service. She paid £180 by card. Book her annual service.";
+
+  const demoBanner = `
+    <div style="background: rgba(20, 184, 166, 0.1); border: 1px solid var(--accent-teal); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+      <span style="font-size: 1.25rem;">ℹ️</span>
+      <div style="font-size: 0.9rem; color: var(--text-color);">
+        <strong>Demo mode:</strong> sample local data. No real messages, invoices, or payments are sent.
+      </div>
+    </div>
+  `;
+
+  const prodBanner = `
+    <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid var(--accent-info); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+      <span style="font-size: 1.25rem;">☁️</span>
+      <div style="font-size: 0.9rem; color: var(--text-color);">
+        <strong>Production mode:</strong> cloud workspace active. Real data is stored securely in Supabase. External emails, SMS, and payments are still disabled.
+      </div>
+    </div>
+  `;
 
   return `
     <div class="view-header">
@@ -35,13 +61,7 @@ export default async function renderDashboard() {
       </div>
     </div>
     
-    <!-- Demo Banner -->
-    <div style="background: rgba(20, 184, 166, 0.1); border: 1px solid var(--accent-teal); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
-      <span style="font-size: 1.25rem;">ℹ️</span>
-      <div style="font-size: 0.9rem; color: var(--text-color);">
-        <strong>Demo mode:</strong> EtaleHub is running locally with sample plumbing/heating data. No real messages, invoices, or payments are sent.
-      </div>
-    </div>
+    ${isDemoMode() ? demoBanner : prodBanner}
     
     <!-- Morning Briefing Card -->
     <div class="card" style="background: linear-gradient(135deg, var(--bg-elevated) 0%, #1a202c 100%); border-left: 4px solid var(--accent-teal); margin-bottom: 2rem;">
@@ -59,7 +79,7 @@ export default async function renderDashboard() {
         <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Try asking EtaleHub:</div>
         <div style="display:flex; flex-wrap: wrap; gap: 1rem; align-items:center;">
           <code style="background: transparent; color: white; padding: 0; font-size: 1rem;">"${suggestedCommand}"</code>
-          <button class="btn btn-primary btn-sm" onclick="window.runMrsSmithDemo && window.runMrsSmithDemo()">▶ Run Mrs Smith demo</button>
+          ${isDemoMode() ? `<button class="btn btn-primary btn-sm" onclick="window.runMrsSmithDemo && window.runMrsSmithDemo()">▶ Run Mrs Smith demo</button>` : ''}
         </div>
       </div>
     </div>
@@ -102,7 +122,7 @@ export default async function renderDashboard() {
           ` : ''}
           
           ${approvals.length === 0 && overdueInvoices.length === 0 && reminders.length === 0 ? `
-            <div class="empty-state" style="padding: 2rem; background: transparent;">
+            <div class="empty-state" style="padding: 2rem; background: transparent; text-align: center;">
               <span style="font-size: 2rem; margin-bottom: 0.5rem; display:block;">🎉</span>
               <div>All caught up! No priority actions.</div>
             </div>
@@ -122,7 +142,7 @@ export default async function renderDashboard() {
         <hr style="border:0; border-top: 1px solid var(--border-color); margin: 1rem 0;" />
         <h4 style="margin-bottom: 0.5rem; font-size: 0.9rem;" class="text-muted">Recent AI Activity</h4>
         <div style="font-size: 0.85rem; display:flex; flex-direction:column; gap:0.5rem;">
-          ${aiActions.length > 0 ? aiActions.slice(0,3).map(a => `
+          ${aiActions.length > 0 ? aiActions.map(a => `
             <div style="padding-left:0.5rem; border-left:2px solid var(--accent-teal);">
               <div class="text-muted">${new Date(a.createdAt).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
               <div>Interpreted: <span class="font-medium">${a.interpretedIntent}</span></div>
@@ -145,13 +165,13 @@ export default async function renderDashboard() {
               <tr onclick="window.location.hash='#/jobs'" style="cursor:pointer;" class="table-row">
                 <td>
                   <div class="font-medium">${j.title}</div>
-                  <div class="text-muted text-sm">${j.jobType.replace('_', ' ')}</div>
+                  <div class="text-muted text-sm">${j.jobType ? j.jobType.replace('_', ' ') : 'General'}</div>
                 </td>
-                <td><span class="text-accent">Customer ID: ${j.customerId}</span></td>
-                <td><span class="badge badge-${j.status === 'complete' ? 'success' : 'warning'}">${j.status}</span></td>
+                <td><span class="text-accent">Customer ID: ${j.customerId || 'N/A'}</span></td>
+                <td><span class="badge badge-${j.status === 'complete' ? 'success' : 'warning'}">${j.status || 'pending'}</span></td>
                 <td>£${j.finalPrice || 'TBD'}</td>
               </tr>
-            `).join('') || '<tr><td colspan="4" class="text-muted text-center">No jobs scheduled for today</td></tr>'}
+            `).join('') || `<tr><td colspan="4" class="text-muted text-center" style="padding: 2rem;">No jobs yet. Add your first customer or ask EtaleHub to create one.</td></tr>`}
           </tbody>
         </table>
       </div>
@@ -166,11 +186,11 @@ export default async function renderDashboard() {
           </div>
           <div>
             <div class="text-muted text-sm">Overdue Amount</div>
-            <div class="font-medium text-danger" style="font-size:1.5rem;">£${overdueInvoices.reduce((s, i) => s + i.total, 0).toFixed(2)}</div>
+            <div class="font-medium text-danger" style="font-size:1.5rem;">£${overdueInvoices.reduce((s, i) => s + (i.total || 0), 0).toFixed(2)}</div>
           </div>
           <div>
             <div class="text-muted text-sm">Active Quotes</div>
-            <div class="font-medium" style="font-size:1.5rem;">2 pending</div>
+            <div class="font-medium" style="font-size:1.5rem;">${isDemoMode() ? '2 pending' : '0 pending'}</div>
           </div>
         </div>
       </div>

@@ -14,7 +14,7 @@ export async function parseCommand(inputText) {
     
     // Log to aiActions db (if available)
     try {
-      const { create } = await import('../db/ai-actions.js');
+      const { create } = await import('../services/data/ai-actions-service.js');
       await create({
         inputText,
         interpretedIntent: Array.isArray(result.intent) ? result.intent.join(', ') : result.intent,
