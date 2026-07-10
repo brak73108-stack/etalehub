@@ -13,6 +13,12 @@ import renderCommandCentre from './views/command-centre.js';
 document.getElementById('app').innerHTML = renderAppShell();
 initAppShell();
 
+// Global Demo Helper
+window.runMrsSmithDemo = function() {
+  localStorage.setItem('etalehub_pending_demo_command', 'I finished Mrs Smith’s boiler service. She paid £180 by card. Book her annual service.');
+  window.location.hash = '#/command';
+};
+
 // Register Routes
 registerRoute('/dashboard', async () => {
   const html = await renderDashboard();

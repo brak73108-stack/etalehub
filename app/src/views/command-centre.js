@@ -101,6 +101,18 @@ export default async function renderCommandCentre() {
     }
   };
 
+  setTimeout(() => {
+    const pendingCommand = localStorage.getItem('etalehub_pending_demo_command');
+    if (pendingCommand) {
+      const input = document.getElementById('chatInput');
+      if (input) {
+        input.value = pendingCommand;
+        input.focus();
+        localStorage.removeItem('etalehub_pending_demo_command');
+      }
+    }
+  }, 50);
+
   return `
     <div style="display: flex; flex-direction: column; height: 100%;">
       <div class="view-header" style="flex-shrink: 0;">
@@ -123,7 +135,7 @@ export default async function renderCommandCentre() {
         <div class="chat-message ai-message" style="align-self: flex-start; max-width: 80%;">
           <div style="font-size: 0.9rem; margin-bottom: 1rem;">I'm your AI Office Manager. What would you like me to do?</div>
           <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-            <button class="btn btn-primary btn-sm" onclick="handleSuggestedCommand('I finished Mrs Smith’s boiler service. She paid £180 by card. Book her annual service.')">▶ Run Mrs Smith demo</button>
+            <button class="btn btn-primary btn-sm" onclick="window.runMrsSmithDemo && window.runMrsSmithDemo()">▶ Run Mrs Smith demo</button>
             <button class="btn btn-ghost" style="font-size: 0.8rem; border: 1px dashed var(--border-color);" onclick="handleSuggestedCommand('Who owes me money?')">"Who owes me money?"</button>
             <button class="btn btn-ghost" style="font-size: 0.8rem; border: 1px dashed var(--border-color);" onclick="handleSuggestedCommand('What jobs do I have today?')">"What jobs do I have today?"</button>
             <button class="btn btn-ghost" style="font-size: 0.8rem; border: 1px dashed var(--border-color);" onclick="handleSuggestedCommand('Draft a quote for replacing two radiators.')">"Draft a quote for replacing two radiators."</button>

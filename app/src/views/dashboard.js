@@ -59,7 +59,7 @@ export default async function renderDashboard() {
         <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Try asking EtaleHub:</div>
         <div style="display:flex; flex-wrap: wrap; gap: 1rem; align-items:center;">
           <code style="background: transparent; color: white; padding: 0; font-size: 1rem;">"${suggestedCommand}"</code>
-          <button class="btn btn-primary btn-sm" onclick="window.location.hash='#/command'; setTimeout(() => { document.getElementById('chatInput').value='${suggestedCommand}'; document.getElementById('chatInput').focus(); }, 100);">▶ Run Mrs Smith demo</button>
+          <button class="btn btn-primary btn-sm" onclick="window.runMrsSmithDemo && window.runMrsSmithDemo()">▶ Run Mrs Smith demo</button>
         </div>
       </div>
     </div>
