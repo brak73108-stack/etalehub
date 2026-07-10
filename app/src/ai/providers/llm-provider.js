@@ -7,7 +7,7 @@ export class LLMProvider {
     return 'openai-structured';
   }
 
-  async processCommand(text) {
+  async processCommand(text, dynamicContext = null) {
     if (!supabase) throw new Error("Supabase client not initialized.");
     
     const businessId = getCurrentBusinessId();
@@ -15,12 +15,12 @@ export class LLMProvider {
        throw new Error("Cannot use LLM without an active business workspace.");
     }
 
-    // Pre-retrieval: Retrieve minimal context here if needed (e.g., top customers)
-    const context = {
+    // Default payload to dynamicContext, adding timestamp for temporal grounding
+    const context = dynamicContext || {
        businessId,
-       mode: 'production',
-       timestamp: new Date().toISOString()
+       mode: 'production'
     };
+    context.timestamp = new Date().toISOString();
 
     const { data, error } = await supabase.functions.invoke('parse-intent', {
       body: { command: text, business_id: businessId, context }
@@ -31,8 +31,8 @@ export class LLMProvider {
        throw error;
     }
 
-    // Validate structured output
-    const validatedResult = validateIntent(data);
+    // Validate structured output against context guarantees
+    const validatedResult = validateIntent(data, context);
     return validatedResult;
   }
 }

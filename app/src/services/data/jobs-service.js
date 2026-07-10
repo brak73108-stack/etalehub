@@ -5,3 +5,9 @@ export async function getById(id) { return getProvider().getJobById(id); }
 export async function getByCustomerId(id) { return getProvider().getJobsByCustomerId(id); }
 export async function create(data) { return getProvider().createJob(data); }
 export async function update(id, data) { return getProvider().updateJob(id, data); }
+
+export async function getToday() {
+  const all = (await getAll()) || [];
+  const todayStr = new Date().toISOString().split('T')[0];
+  return all.filter(j => j.scheduledDate && j.scheduledDate.startsWith(todayStr));
+}

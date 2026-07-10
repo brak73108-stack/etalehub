@@ -1,4 +1,5 @@
 import { aiProvider } from './providers/ai-provider.js';
+import { buildLLMContext } from './context/context-builder.js';
 
 /**
  * Parse raw user input into structured intents, entities, and proposed actions.
@@ -9,10 +10,13 @@ import { aiProvider } from './providers/ai-provider.js';
  */
 export async function parseCommand(inputText) {
   try {
-    // Call the active AI provider
-    const result = await aiProvider.processCommand(inputText);
+    // 1. Build Dynamic Context
+    const dynamicContext = await buildLLMContext(inputText);
+
+    // 2. Call the active AI provider with context
+    const result = await aiProvider.processCommand(inputText, dynamicContext);
     
-    // Log to aiActions db (if available)
+    // 3. Log to aiActions db (if available)
     try {
       const { create } = await import('../services/data/ai-actions-service.js');
       await create({

@@ -94,6 +94,8 @@ Allowed intents: create_customer, update_customer, create_job, complete_job, rec
               entities: {
                 type: "object",
                 properties: {
+                  customerId: { type: ["number", "string", "null"] },
+                  jobId: { type: ["number", "string", "null"] },
                   customerName: { type: "string" },
                   customerAddress: { type: "string" },
                   jobType: { type: "string" },

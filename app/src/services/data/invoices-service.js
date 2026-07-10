@@ -6,3 +6,9 @@ export async function getByCustomerId(id) { const all = await getAll() || []; re
 export async function getNextInvoiceNumber() { return getProvider().getNextInvoiceNumber(); }
 export async function create(data) { return getProvider().createInvoice(data); }
 export async function update(id, data) { return getProvider().updateInvoice(id, data); }
+
+export async function getOverdue() {
+  const all = (await getAll()) || [];
+  const now = new Date();
+  return all.filter(i => i.status !== 'paid' && new Date(i.dueDate) < now);
+}

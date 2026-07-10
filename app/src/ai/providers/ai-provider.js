@@ -6,7 +6,7 @@ const localProvider = new LocalPatternProvider();
 const llmProvider = new LLMProvider();
 
 class AIProviderFactory {
-  async processCommand(text) {
+  async processCommand(text, dynamicContext = null) {
     const enableLlm = import.meta.env.VITE_ENABLE_LLM === 'true';
 
     // 1. If in Demo Mode, always use Local Pattern
@@ -24,7 +24,7 @@ class AIProviderFactory {
     // 3. Attempt LLM with fallback
     try {
       console.log('[AIProvider] Routing to LLM Edge Function...');
-      return await llmProvider.processCommand(text);
+      return await llmProvider.processCommand(text, dynamicContext);
     } catch (e) {
       console.warn('[AIProvider] LLM Provider failed, falling back to local pattern provider:', e);
       return await localProvider.processCommand(text);

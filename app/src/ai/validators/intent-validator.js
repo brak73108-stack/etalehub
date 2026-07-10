@@ -1,6 +1,6 @@
 /**
  * Validates the structured output from the LLM or Local pattern provider.
- * Enforces strict safety, duplicate prevention, and intent whitelisting.
+ * Enforces strict safety, duplicate prevention, intent whitelisting, and entity safety.
  */
 
 const ALLOWED_INTENTS = [
@@ -19,7 +19,7 @@ const ALLOWED_INTENTS = [
   'ask_business_question'
 ];
 
-export function validateIntent(result) {
+export function validateIntent(result, context = {}) {
   if (!result || typeof result !== 'object') {
     throw new Error('Invalid intent format: expected object.');
   }
@@ -46,11 +46,49 @@ export function validateIntent(result) {
     validated.explanation = 'Could not confidently map command to a supported workflow.';
   }
 
+  // Entity ID Safety bounds checking
+  if (validated.entities.customerId) {
+    const validIds = (context.matchingCustomers || []).map(c => c.id);
+    if (!validIds.includes(validated.entities.customerId)) {
+      validated.safeToExecute = false;
+      validated.userConfirmationRequired = true;
+      validated.explanation = `LLM returned unverified customerId: ${validated.entities.customerId}`;
+    }
+  }
+
+  if (validated.entities.jobId) {
+    const validIds = (context.matchingJobs || []).map(j => j.id);
+    if (!validIds.includes(validated.entities.jobId)) {
+      validated.safeToExecute = false;
+      validated.userConfirmationRequired = true;
+      validated.explanation = `LLM returned unverified jobId: ${validated.entities.jobId}`;
+    }
+  }
+
+  // Ambiguity Check
+  if (context.matchingCustomers && context.matchingCustomers.length > 1) {
+    // If the LLM didn't confidently narrow it down to 1 ID, or we have multiple namesakes
+    // Force user confirmation
+    if (!validated.entities.customerId || validated.confidence < 0.95) {
+       validated.userConfirmationRequired = true;
+       validated.safeToExecute = false;
+       if (!validated.missingInformation.includes('Which customer did you mean?')) {
+          validated.missingInformation.push('Which customer did you mean?');
+       }
+    }
+  }
+
   // Confidence & Risk overrides
   if (validated.confidence < 0.85 || validated.riskLevel === 'high') {
     validated.requiresApproval = true;
     validated.userConfirmationRequired = true;
     validated.safeToExecute = false;
+  }
+
+  // Customer-facing messaging override
+  if (validated.intents.includes('payment_reminder') || validated.intents.includes('customer_message')) {
+     validated.requiresApproval = true;
+     validated.safeToExecute = false;
   }
 
   return validated;
