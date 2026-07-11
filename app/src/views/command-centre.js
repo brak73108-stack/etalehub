@@ -27,9 +27,21 @@ let customerMap = {};
 let jobMap = {};
 let activeTab = 'chat';
 let activeFilter = 'pending';
+let pendingClarification = null;
 
 export default async function renderCommandCentre() {
   await loadData();
+
+  window.cancelClarification = () => {
+    pendingClarification = null;
+    appendMessage('No problem — I cancelled that pending action.', 'ai');
+    sessionStorage.removeItem('etalehub_pending_clarification');
+  };
+
+  window.handleClarificationOption = (value, field) => {
+    document.getElementById('chatInput').value = value;
+    window.handleCommandSubmit();
+  };
 
   window.handleCommandSubmit = async () => {
     if (isProcessing) return;
@@ -42,10 +54,61 @@ export default async function renderCommandCentre() {
     document.getElementById('chatSubmitBtn').disabled = true;
     
     appendMessage(text, 'user');
+    
+    if (text.toLowerCase() === 'cancel' || text.toLowerCase() === 'nevermind') {
+      if (pendingClarification) {
+         window.cancelClarification();
+         isProcessing = false;
+         document.getElementById('chatSubmitBtn').disabled = false;
+         document.getElementById('chatInput').focus();
+         return;
+      }
+    }
+    
     appendLoading();
     
     try {
-      const parsed = await parseCommand(text);
+      let commandPayload = text;
+      if (pendingClarification) {
+         // Merge text as the clarification answer
+         commandPayload = {
+            isClarification: true,
+            originalCommand: pendingClarification.originalCommand,
+            intent: pendingClarification.intent,
+            entities: pendingClarification.entities,
+            answer: text
+         };
+      }
+
+      const parsed = await parseCommand(commandPayload);
+      
+      if (parsed.intent && parsed.intent.includes('clarification_required')) {
+         // Update pending state
+         pendingClarification = {
+             id: 'clarification_' + Date.now(),
+             originalCommand: pendingClarification ? pendingClarification.originalCommand : text,
+             intent: parsed.originalIntent || parsed.intent,
+             entities: parsed.entities,
+             missingInformation: parsed.missingInformation,
+             expiresAt: Date.now() + 15 * 60 * 1000 // 15 mins
+         };
+         sessionStorage.setItem('etalehub_pending_clarification', JSON.stringify(pendingClarification));
+         
+         removeLoading();
+         appendClarificationCard({
+             missing: parsed.missingInformation,
+             options: parsed.options || []
+         });
+         isProcessing = false;
+         document.getElementById('chatSubmitBtn').disabled = false;
+         document.getElementById('chatInput').focus();
+         return;
+      }
+
+      // If we get here, validation passed or failed definitively. Clear state.
+      pendingClarification = null;
+      sessionStorage.removeItem('etalehub_pending_clarification');
+
       const result = await routeCommand(parsed);
       
       removeLoading();
@@ -207,6 +270,26 @@ export default async function renderCommandCentre() {
         localStorage.removeItem('etalehub_pending_demo_command');
       }
     }
+
+    try {
+      const storedClarification = sessionStorage.getItem('etalehub_pending_clarification');
+      if (storedClarification) {
+         const parsed = JSON.parse(storedClarification);
+         if (parsed.expiresAt && Date.now() > parsed.expiresAt) {
+            sessionStorage.removeItem('etalehub_pending_clarification');
+         } else {
+            pendingClarification = parsed;
+            appendClarificationCard({
+               missing: pendingClarification.missingInformation || ['Waiting for your answer...'],
+               options: pendingClarification.options || []
+            });
+         }
+      }
+    } catch (e) {
+      console.warn('Could not parse pending clarification', e);
+      sessionStorage.removeItem('etalehub_pending_clarification');
+    }
+
     renderQueueRows();
   }, 50);
 
@@ -409,6 +492,57 @@ function appendActionCard(card, type = 'success') {
       <span class="badge badge-${badgeClass}">${badgeLabel}</span>
     </div>
     <div style="color:var(--text-color);">${card.details}</div>
+  `;
+  history.appendChild(div);
+  history.scrollTop = history.scrollHeight;
+}
+
+function appendClarificationCard(card) {
+  const history = document.getElementById('chatHistory');
+  if(!history) return;
+  const div = document.createElement('div');
+  div.style.alignSelf = 'flex-start';
+  div.style.maxWidth = '80%';
+  div.style.padding = '1rem';
+  div.style.borderRadius = '8px';
+  div.style.background = 'var(--bg-primary)';
+  div.style.borderLeft = '4px solid #3b82f6';
+  div.style.display = 'flex';
+  div.style.flexDirection = 'column';
+  div.style.gap = '0.75rem';
+  
+  const title = "I need a little more information before I can do that.";
+  const missingText = (card.missing || []).join(' ');
+
+  let optionsHtml = '';
+  if (card.options && card.options.length > 0) {
+     optionsHtml = `<div style="display:flex; flex-direction:column; gap:0.5rem;">` + 
+       card.options.map(opt => `
+         <button class="btn btn-ghost" style="border: 1px solid var(--border-color); justify-content: flex-start; text-align: left;" onclick="handleClarificationOption('${opt.id}', 'selectedOptionId')">
+           ${opt.label}
+         </button>
+       `).join('') +
+     `</div>`;
+  }
+
+  div.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+      <div style="font-weight:bold; color:#3b82f6; display:flex; align-items:center; gap:0.5rem;">
+        ℹ️ Clarification Needed
+      </div>
+    </div>
+    
+    <div class="text-sm" style="color:var(--text-color);">
+      ${title}
+    </div>
+    
+    ${missingText ? `<div class="text-sm font-medium" style="color:var(--text-color);">${missingText}</div>` : ''}
+    
+    ${optionsHtml}
+    
+    <div style="display:flex; gap: 0.5rem; margin-top: 0.5rem;">
+      <button class="btn btn-ghost text-muted btn-sm" onclick="cancelClarification()">Cancel</button>
+    </div>
   `;
   history.appendChild(div);
   history.scrollTop = history.scrollHeight;

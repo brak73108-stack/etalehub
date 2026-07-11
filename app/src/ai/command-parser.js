@@ -8,13 +8,31 @@ import { buildLLMContext } from './context/context-builder.js';
  * @param {string} inputText - Raw natural language command
  * @returns {Promise<Object>} - Parsed result from the AI provider
  */
-export async function parseCommand(inputText) {
+export async function parseCommand(inputPayload) {
   try {
+    let inputText = inputPayload;
+    let clarificationMerge = null;
+    
+    if (typeof inputPayload === 'object' && inputPayload.isClarification) {
+      inputText = inputPayload.originalCommand;
+      clarificationMerge = inputPayload;
+    }
+
     // 1. Build Dynamic Context
     const dynamicContext = await buildLLMContext(inputText);
 
     // 2. Call the active AI provider with context
-    const result = await aiProvider.processCommand(inputText, dynamicContext);
+    // If it's a clarification, we append the clarification answer to the original text for the LLM context.
+    const textToSend = clarificationMerge 
+      ? `Original command: "${inputText}". User clarified missing info with: "${clarificationMerge.answer}"` 
+      : inputText;
+
+    const result = await aiProvider.processCommand(textToSend, dynamicContext);
+    
+    // If we have a pending clarification, try to preserve original intent if the LLM lost it
+    if (clarificationMerge && !result.intents.includes(clarificationMerge.intent)) {
+      result.intents.unshift(clarificationMerge.intent);
+    }
     
     // 3. Log to aiActions db (if available)
     try {
@@ -40,6 +58,11 @@ export async function parseCommand(inputText) {
       confidence: result.confidence,
       riskLevel: result.riskLevel,
       requiresApproval: result.requiresApproval,
+      missingInformation: result.missingInformation,
+      options: result.options,
+      safeToExecute: result.safeToExecute,
+      userConfirmationRequired: result.userConfirmationRequired,
+      explanation: result.explanation,
       actions: [{ type: result.suggestedWorkflow, description: result.explanation, safe: result.safeToExecute, data: result.entities }]
     };
   } catch (error) {
