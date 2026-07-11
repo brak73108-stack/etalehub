@@ -1,6 +1,7 @@
 import * as search from './entity-search.js';
 import * as sanitizer from './context-sanitizer.js';
 import { getCurrentBusinessId, isDemoMode } from '../../services/mode-service.js';
+import { getSettings } from '../../services/data/business-settings-service.js';
 
 /**
  * Infer command type to reduce the amount of context loaded
@@ -36,6 +37,7 @@ export async function buildLLMContext(commandText) {
     mode,
     businessId,
     commandTypeHint,
+    businessSettings: null,
     matchingCustomers: [],
     matchingJobs: [],
     relevantInvoices: [],
@@ -58,6 +60,14 @@ export async function buildLLMContext(commandText) {
   }
 
   try {
+    // 0. Load Settings
+    try {
+      const rawSettings = await getSettings();
+      context.businessSettings = sanitizer.sanitizeBusinessSettings(rawSettings);
+    } catch (e) {
+      console.warn('[ContextBuilder] Failed to load business settings, using default safe context', e);
+    }
+
     // 1. Search Customers
     const customers = await search.searchCustomers(commandText);
     context.matchingCustomers = sanitizer.sanitizeArray(customers, sanitizer.sanitizeCustomer);

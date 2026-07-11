@@ -9,14 +9,26 @@ import { getAll as getAllInvoices } from '../services/data/invoices-service.js';
 import { getPending as getPendingApprovals } from '../services/data/approvals-service.js';
 import { getAll as getAllReminders } from '../services/data/reminders-service.js';
 import { getAll as getAllAiActions } from '../services/data/ai-actions-service.js';
-import { getAll as getAllAuditLogs } from '../services/data/audit-service.js';
+import { getAll as getAllAuditLogs, logAudit } from '../services/data/audit-service.js';
+import { getAll as getAllCustomers } from '../services/data/customers-service.js';
+import { getSettings, updateSettingsSection, getDefaultSettings } from '../services/data/business-settings-service.js';
 import { getReadableAction, getSourceBadge } from '../utils/audit-helpers.js';
 
 export default async function renderDashboard() {
+  const isDemo = isDemoMode();
+  
   const jobs = await getAllJobs() || [];
   const invoices = await getAllInvoices() || [];
   const approvals = await getPendingApprovals() || [];
   const allAudit = await getAllAuditLogs() || [];
+  const customers = await getAllCustomers() || [];
+  
+  let settings = { onboardingState: {}, businessProfile: {}, serviceTypes: [] };
+  try {
+    settings = await getSettings();
+  } catch (e) {
+    console.warn("Failed to load settings", e);
+  }
   
   const recentAudit = allAudit.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0, 10);
   
@@ -29,12 +41,56 @@ export default async function renderDashboard() {
   const aiActions = aiActionsAll.slice(0, 5); // getRecent(5)
   
   const todayJobs = jobs.filter(j => j.scheduledDate && j.scheduledDate.startsWith(todayStr));
-  const expectedRevenue = todayJobs.reduce((sum, j) => sum + (j.finalPrice || 0), 0) || (isDemoMode() ? 540 : 0); 
+  const expectedRevenue = todayJobs.reduce((sum, j) => sum + (j.finalPrice || 0), 0) || (isDemo ? 540 : 0); 
   const overdueInvoices = invoices.filter(i => i.status === 'overdue');
   
   const aiCompletedJobs = jobs.filter(j => j.status === 'complete' && j.serviceHistoryNote && j.serviceHistoryNote.includes('AI workflow'));
   const paidThisMonth = invoices.filter(i => i.status === 'paid').reduce((sum, i) => sum + i.total, 0);
   
+  // -- ONBOARDING LOGIC --
+  let onboarding = settings.onboardingState || {};
+  
+  // Infer states based on actual data
+  const hasProfName = !!settings.businessProfile?.businessName;
+  onboarding.businessProfileComplete = onboarding.businessProfileComplete || hasProfName;
+  
+  const defServices = getDefaultSettings().serviceTypes;
+  const isDefaultServices = JSON.stringify(settings.serviceTypes) === JSON.stringify(defServices);
+  onboarding.serviceTypesReviewed = onboarding.serviceTypesReviewed || !isDefaultServices;
+  
+  onboarding.firstCustomerCreated = onboarding.firstCustomerCreated || customers.length > 0;
+  onboarding.firstJobCreated = onboarding.firstJobCreated || jobs.length > 0;
+  onboarding.firstInvoiceDraftCreated = onboarding.firstInvoiceDraftCreated || invoices.length > 0;
+  onboarding.firstReminderCreated = onboarding.firstReminderCreated || allReminders.length > 0;
+  onboarding.aiCommandCentreTried = onboarding.aiCommandCentreTried || aiActionsAll.length > 0;
+  // approvalQueueReviewed requires actual routing check, we'll rely on the DB flag or leave false
+  
+  window.dismissBetaLimits = async () => {
+    try {
+      const current = settings.onboardingState || {};
+      current.betaLimitsDismissed = true;
+      await updateSettingsSection('onboardingState', current);
+      await logAudit('beta_limits_dismissed', 'settings', null, {});
+      document.getElementById('beta-limits-card').style.display = 'none';
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const completedCount = [
+    onboarding.businessProfileComplete,
+    onboarding.serviceTypesReviewed,
+    onboarding.firstCustomerCreated,
+    onboarding.firstJobCreated,
+    onboarding.firstInvoiceDraftCreated,
+    onboarding.firstReminderCreated,
+    onboarding.aiCommandCentreTried,
+    onboarding.approvalQueueReviewed,
+    onboarding.feedbackSubmitted
+  ].filter(Boolean).length;
+  const totalSteps = 9;
+  const onboardingProgress = Math.round((completedCount / totalSteps) * 100);
+
   const suggestedCommand = "I finished Mrs Smith’s boiler service. She paid £180 by card. Book her annual service.";
 
   const demoBanner = `
@@ -55,6 +111,84 @@ export default async function renderDashboard() {
     </div>
   `;
 
+  const betaLimitsCard = !onboarding.betaLimitsDismissed ? `
+    <div id="beta-limits-card" class="card" style="background: var(--bg-elevated); border-left: 4px solid var(--accent-warning); margin-bottom: 2rem; position: relative;">
+      <button onclick="dismissBetaLimits()" style="position: absolute; top: 1rem; right: 1rem; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 1.2rem;" title="Dismiss">&times;</button>
+      <h3 style="margin-top: 0; color: var(--accent-warning); display:flex; align-items:center; gap:0.5rem;">
+        <span>🛡️</span> Beta Safety Limits
+      </h3>
+      <p style="margin-bottom: 0.5rem; font-size: 1rem;">EtaleHub is in controlled beta. To protect your business and customers, external sending and payment processing are disabled while workflows are being tested.</p>
+      <ul style="margin: 0; padding-left: 1.5rem; color: var(--text-muted); font-size: 0.9rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+        <li>Email sending is disabled</li>
+        <li>SMS sending is disabled</li>
+        <li>Stripe/payment processing is disabled</li>
+        <li>Accounting integrations are disconnected</li>
+        <li>Approval Queue is internal only for now</li>
+        <li>AI can draft, but cannot send customer messages</li>
+      </ul>
+    </div>
+  ` : '';
+
+  const renderChecklistIcon = (isComplete) => {
+    return isComplete 
+      ? '<span style="color: var(--accent-success); font-size: 1.2rem;">✅</span>' 
+      : '<span style="color: var(--text-muted); font-size: 1.2rem;">⭕</span>';
+  };
+
+  const checklistCard = `
+    <div class="card" style="margin-bottom: 2rem; border: 1px solid var(--border-color);">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
+        <h3 style="margin: 0;">${isDemo ? 'Demo Walkthrough' : 'Beta Setup Checklist'}</h3>
+        <span class="text-sm font-medium text-muted">${completedCount}/${totalSteps} Complete</span>
+      </div>
+      
+      <div style="background: var(--bg-elevated); border-radius: 8px; height: 6px; margin-bottom: 1.5rem; overflow: hidden;">
+        <div style="height: 100%; width: ${onboardingProgress}%; background: var(--accent-success); transition: width 0.3s ease;"></div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+        <div style="display:flex; align-items:center; gap: 0.75rem;">
+          ${renderChecklistIcon(onboarding.businessProfileComplete)}
+          <a href="#/settings" style="text-decoration:none; color: ${onboarding.businessProfileComplete ? 'var(--text-muted)' : 'var(--text-color)'};">Complete business profile</a>
+        </div>
+        <div style="display:flex; align-items:center; gap: 0.75rem;">
+          ${renderChecklistIcon(onboarding.serviceTypesReviewed)}
+          <a href="#/settings" style="text-decoration:none; color: ${onboarding.serviceTypesReviewed ? 'var(--text-muted)' : 'var(--text-color)'};">Review service types</a>
+        </div>
+        <div style="display:flex; align-items:center; gap: 0.75rem;">
+          ${renderChecklistIcon(onboarding.firstCustomerCreated)}
+          <a href="#/customers" style="text-decoration:none; color: ${onboarding.firstCustomerCreated ? 'var(--text-muted)' : 'var(--text-color)'};">Add first customer</a>
+        </div>
+        <div style="display:flex; align-items:center; gap: 0.75rem;">
+          ${renderChecklistIcon(onboarding.firstJobCreated)}
+          <a href="#/jobs" style="text-decoration:none; color: ${onboarding.firstJobCreated ? 'var(--text-muted)' : 'var(--text-color)'};">Add first job</a>
+        </div>
+        <div style="display:flex; align-items:center; gap: 0.75rem;">
+          ${renderChecklistIcon(onboarding.firstInvoiceDraftCreated)}
+          <a href="#/money" style="text-decoration:none; color: ${onboarding.firstInvoiceDraftCreated ? 'var(--text-muted)' : 'var(--text-color)'};">Create first invoice draft</a>
+        </div>
+        <div style="display:flex; align-items:center; gap: 0.75rem;">
+          ${renderChecklistIcon(onboarding.firstReminderCreated)}
+          <a href="#/calendar" style="text-decoration:none; color: ${onboarding.firstReminderCreated ? 'var(--text-muted)' : 'var(--text-color)'};">Create first reminder</a>
+        </div>
+        <div style="display:flex; align-items:center; gap: 0.75rem;">
+          ${renderChecklistIcon(onboarding.aiCommandCentreTried)}
+          <a href="#/command" style="text-decoration:none; color: ${onboarding.aiCommandCentreTried ? 'var(--text-muted)' : 'var(--text-color)'};">Try AI Command Centre</a>
+        </div>
+        <div style="display:flex; align-items:center; gap: 0.75rem;">
+          ${renderChecklistIcon(onboarding.approvalQueueReviewed)}
+          <a href="#/command" style="text-decoration:none; color: ${onboarding.approvalQueueReviewed ? 'var(--text-muted)' : 'var(--text-color)'};">Review Approval Queue</a>
+        </div>
+        <div style="display:flex; align-items:center; gap: 0.75rem;">
+          ${renderChecklistIcon(onboarding.feedbackSubmitted)}
+          ${onboarding.feedbackSubmitted 
+            ? `<span style="color: var(--text-muted);">Submit beta feedback</span>` 
+            : `<a href="#" onclick="event.preventDefault(); window.openFeedbackModal && window.openFeedbackModal();" style="text-decoration:none; color: var(--text-color);">Submit beta feedback</a>`}
+        </div>
+      </div>
+    </div>
+  `;
+
   return `
     <div class="view-header">
       <div>
@@ -63,7 +197,11 @@ export default async function renderDashboard() {
       </div>
     </div>
     
-    ${isDemoMode() ? demoBanner : prodBanner}
+    ${isDemo ? demoBanner : prodBanner}
+    
+    ${betaLimitsCard}
+    
+    ${checklistCard}
     
     <!-- Morning Briefing Card -->
     <div class="card" style="background: linear-gradient(135deg, var(--bg-elevated) 0%, #1a202c 100%); border-left: 4px solid var(--accent-teal); margin-bottom: 2rem;">

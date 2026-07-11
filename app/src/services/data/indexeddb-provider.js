@@ -5,7 +5,9 @@ import * as quotesDb from '../../db/quotes.js';
 import * as remindersDb from '../../db/reminders.js';
 import * as approvalsDb from '../../db/approvals.js';
 import * as auditDb from '../../db/audit.js';
+import * as settingsDb from '../../db/settings.js';
 import * as aiActionsDb from '../../db/ai-actions.js';
+import * as feedbackDb from '../../db/feedback.js';
 
 // --- CUSTOMERS ---
 export async function getCustomers() { return customersDb.getAll(); }
@@ -55,3 +57,11 @@ export async function createAuditLog(data) { return auditDb.create(data); }
 // --- AI ACTIONS ---
 export async function getAiActions() { return aiActionsDb.getAll(); }
 export async function createAiAction(data) { return aiActionsDb.create(data); }
+
+// --- SETTINGS ---
+export async function getAllSettings() { return settingsDb.getAllSettings(); }
+export async function getSettingSection(section) { return settingsDb.getSettingSection(section); }
+export async function updateSettingSection(section, data) { return settingsDb.updateSettingSection(section, data); }
+
+// --- FEEDBACK ---
+export async function createFeedback(data) { return feedbackDb.create(data); }

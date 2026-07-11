@@ -43,7 +43,7 @@ export async function resetDatabase() {
   console.log('[Seed] Resetting database (developer mode)');
   const db = await getDB();
   const tx = db.transaction(
-    ['customers', 'jobs', 'invoices', 'quotes', 'reminders', 'approvals', 'auditLog', 'aiActions'],
+    ['customers', 'jobs', 'invoices', 'quotes', 'reminders', 'approvals', 'auditLog', 'aiActions', 'settings'],
     'readwrite'
   );
   tx.objectStore('customers').clear();
@@ -54,6 +54,7 @@ export async function resetDatabase() {
   tx.objectStore('approvals').clear();
   tx.objectStore('auditLog').clear();
   tx.objectStore('aiActions').clear();
+  tx.objectStore('settings').clear();
   
   return new Promise((resolve) => {
     tx.oncomplete = () => {
@@ -879,6 +880,11 @@ export async function seedDatabase() {
     }
 
     console.log('[Seed] Demo data inserted successfully.');
+    
+    // 9. Seed Settings
+    const { resetSettingsToDefaults } = await import('../services/data/business-settings-service.js');
+    await resetSettingsToDefaults();
+    console.log('[Seed] Default settings applied.');
 
   } catch (error) {
     console.error('[Seed] Error seeding database:', error);

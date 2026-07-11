@@ -85,10 +85,36 @@ export function validateIntent(result, context = {}) {
     validated.safeToExecute = false;
   }
 
-  // Customer-facing messaging override
-  if (validated.intents.includes('payment_reminder') || validated.intents.includes('customer_message')) {
-     validated.requiresApproval = true;
-     validated.safeToExecute = false;
+  // --- Business Settings & Approval Overrides ---
+  const settings = context.businessSettings || {};
+  const approvalRules = settings.approvalRules || {};
+  
+  // Default safer behavior for unknowns
+  const reqInvoiceApproval = approvalRules.requireApprovalForInvoiceDrafts ?? true;
+  const reqQuoteApproval = approvalRules.requireApprovalForQuoteDrafts ?? true;
+
+  // Check Settings
+  if (validated.intents.includes('create_invoice_draft') && reqInvoiceApproval) {
+    validated.requiresApproval = true;
+  }
+  if (validated.intents.includes('create_quote_draft') && reqQuoteApproval) {
+    validated.requiresApproval = true;
+  }
+
+  // Mandatory Safety Overrides (cannot be disabled by settings)
+  const isCustomerMessage = validated.intents.some(i => i.includes('message') || i.includes('send'));
+  const isPaymentReminder = validated.intents.includes('create_reminder') && validated.entities.type === 'payment';
+  const isBulkAction = validated.entities.bulk === true; // Generic flag if LLM supports it
+  
+  if (isCustomerMessage || isPaymentReminder || isBulkAction) {
+    validated.requiresApproval = true;
+    validated.safeToExecute = false;
+  }
+
+  // Double check high risk
+  if (validated.riskLevel === 'high') {
+    validated.requiresApproval = true;
+    validated.safeToExecute = false;
   }
 
   return validated;

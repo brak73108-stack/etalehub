@@ -9,7 +9,7 @@
  */
 
 const DB_NAME = 'etalehub';
-const DB_VERSION = 1;
+const DB_VERSION = 3;
 
 /** @type {IDBDatabase|null} */
 let dbInstance = null;
@@ -110,6 +110,11 @@ const STORE_DEFINITIONS = [
       { name: 'createdAt', keyPath: 'createdAt', options: { unique: false } },
     ],
   },
+  {
+    name: 'settings',
+    options: { keyPath: 'section' },
+    indexes: [],
+  },
 ];
 
 /**
@@ -119,10 +124,35 @@ const STORE_DEFINITIONS = [
  */
 function migrateV1(db) {
   for (const storeDef of STORE_DEFINITIONS) {
+    if (storeDef.name === 'settings') continue; // Handled in v2
     const store = db.createObjectStore(storeDef.name, storeDef.options);
     for (const idx of storeDef.indexes) {
       store.createIndex(idx.name, idx.keyPath, idx.options);
     }
+  }
+}
+
+/**
+ * Run the version-2 migration: add settings store.
+ *
+ * @param {IDBDatabase} db
+ */
+function migrateV2(db) {
+  if (!db.objectStoreNames.contains('settings')) {
+    db.createObjectStore('settings', { keyPath: 'section' });
+  }
+}
+
+/**
+ * Run the version-3 migration: add beta_feedback store.
+ *
+ * @param {IDBDatabase} db
+ */
+function migrateV3(db) {
+  if (!db.objectStoreNames.contains('beta_feedback')) {
+    const store = db.createObjectStore('beta_feedback', { keyPath: 'id', autoIncrement: true });
+    store.createIndex('feedback_type', 'feedback_type', { unique: false });
+    store.createIndex('status', 'status', { unique: false });
   }
 }
 
@@ -152,8 +182,15 @@ export async function initDatabase() {
         migrateV1(db);
       }
 
-      // Future migrations would go here:
-      // if (oldVersion < 2) { migrateV2(db); }
+      // Version 1 → 2: settings store
+      if (oldVersion < 2) {
+        migrateV2(db);
+      }
+
+      // Version 2 → 3: beta_feedback store
+      if (oldVersion < 3) {
+        migrateV3(db);
+      }
     };
 
     request.onsuccess = async (event) => {

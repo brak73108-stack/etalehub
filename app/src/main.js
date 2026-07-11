@@ -9,6 +9,7 @@ import { renderAppShell, initAppShell, updateTopbarTitle, updateSidebarActive } 
 import { initMode, isDemoMode, getCurrentBusinessId } from './services/mode-service.js';
 import { getSession } from './services/auth-service.js';
 import { initDatabase } from './db/database.js'; // Fallback for Demo Mode
+import { initFeedbackModal } from './components/feedback-modal.js';
 
 // Views
 import renderDashboard from './views/dashboard.js';
@@ -125,6 +126,9 @@ async function bootstrap() {
     
     // 3. Start Router
     initRouter();
+    
+    // 3.5 Init Feedback Modal
+    initFeedbackModal();
     
     // 4. Force initial render
     const evt = new HashChangeEvent("hashchange", { newURL: window.location.href, oldURL: window.location.href });

@@ -266,3 +266,80 @@ export async function createAiAction(data) {
   if (error) throw error;
   return parseData(result);
 }
+
+// --- SETTINGS ---
+export async function getBusinessSettingsRow() {
+  const { data, error } = await supabase
+    .from('business_settings')
+    .select('*')
+    .single();
+    
+  if (error) {
+    if (error.code === 'PGRST116') {
+      // No rows returned, create one
+      const { data: session } = await supabase.auth.getSession();
+      const user = session?.session?.user;
+      if (!user) return {};
+
+      // Get business id
+      const { data: busUser } = await supabase
+        .from('business_users')
+        .select('business_id')
+        .eq('profile_id', user.id)
+        .eq('status', 'active')
+        .limit(1)
+        .single();
+        
+      if (busUser) {
+        const { data: newSettings, error: insertError } = await supabase
+          .from('business_settings')
+          .insert({ business_id: busUser.business_id })
+          .select()
+          .single();
+        if (!insertError) return newSettings;
+      }
+      return {};
+    }
+    throw error;
+  }
+  return data;
+}
+
+export async function updateBusinessSettingsRow(updates) {
+  const { data: session } = await supabase.auth.getSession();
+  const user = session?.session?.user;
+  if (!user) throw new Error('Not authenticated');
+
+  const { data: busUser } = await supabase
+    .from('business_users')
+    .select('business_id')
+    .eq('profile_id', user.id)
+    .eq('status', 'active')
+    .limit(1)
+    .single();
+    
+  if (!busUser) throw new Error('No active business found');
+
+  const { data, error } = await supabase
+    .from('business_settings')
+    .update(updates)
+    .eq('business_id', busUser.business_id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+// --- FEEDBACK ---
+export async function createFeedback(data) {
+  // we use prepareData so it injects business_id. We also want to inject user_id if possible.
+  const prepared = prepareData(data);
+  const { data: session } = await supabase.auth.getSession();
+  if (session?.session?.user?.id) {
+    prepared.user_id = session.session.user.id;
+  }
+  const { data: result, error } = await supabase.from('beta_feedback').insert(prepared).select().single();
+  if (error) throw error;
+  return parseData(result);
+}
