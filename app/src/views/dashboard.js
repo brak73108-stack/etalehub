@@ -9,16 +9,18 @@ import { getAll as getAllInvoices } from '../services/data/invoices-service.js';
 import { getPending as getPendingApprovals } from '../services/data/approvals-service.js';
 import { getAll as getAllReminders } from '../services/data/reminders-service.js';
 import { getAll as getAllAiActions } from '../services/data/ai-actions-service.js';
+import { getAll as getAllAuditLogs } from '../services/data/audit-service.js';
+import { getReadableAction, getSourceBadge } from '../utils/audit-helpers.js';
 
 export default async function renderDashboard() {
   const jobs = await getAllJobs() || [];
   const invoices = await getAllInvoices() || [];
   const approvals = await getPendingApprovals() || [];
+  const allAudit = await getAllAuditLogs() || [];
+  
+  const recentAudit = allAudit.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0, 10);
   
   // reminders-service.js getAll maps to db.getAll() which we then need to filter if we only want 'due'
-  // But wait, in Phase 2 it was getDue(). Let's check how the proxy was made.
-  // I created `import { getProvider } from './data-provider.js'; export async function getAll() { return getProvider().getReminders(); }`
-  // So I'll fetch all and filter client-side for safety/simplicity here, or just grab the first few.
   const allReminders = await getAllReminders() || [];
   const todayStr = new Date().toISOString().split('T')[0];
   const reminders = allReminders.filter(r => r.scheduledDate && r.scheduledDate.startsWith(todayStr) && r.status === 'pending');
@@ -152,7 +154,7 @@ export default async function renderDashboard() {
       </div>
     </div>
     
-    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
       <!-- Today's Schedule -->
       <div class="card">
         <h3 style="margin-bottom: 1rem;">Today's Schedule</h3>
@@ -176,24 +178,28 @@ export default async function renderDashboard() {
         </table>
       </div>
       
-      <!-- Business Health -->
-      <div class="card">
-        <h3 style="margin-bottom: 1rem;">Business Health</h3>
-        <div style="display:flex; flex-direction:column; gap:1rem;">
-          <div>
-            <div class="text-muted text-sm">Paid This Month</div>
-            <div class="font-medium text-success" style="font-size:1.5rem;">£${paidThisMonth.toFixed(2)}</div>
-          </div>
-          <div>
-            <div class="text-muted text-sm">Overdue Amount</div>
-            <div class="font-medium text-danger" style="font-size:1.5rem;">£${overdueInvoices.reduce((s, i) => s + (i.total || 0), 0).toFixed(2)}</div>
-          </div>
-          <div>
-            <div class="text-muted text-sm">Active Quotes</div>
-            <div class="font-medium" style="font-size:1.5rem;">${isDemoMode() ? '2 pending' : '0 pending'}</div>
-          </div>
+      <!-- Recent Activity -->
+      <div class="card" style="overflow: hidden;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1rem;">
+          <h3 style="margin:0;">Recent Activity</h3>
+          <a href="#/settings" class="text-accent text-sm" style="text-decoration:none;">View all →</a>
+        </div>
+        <div style="display:flex; flex-direction:column; gap: 0.75rem;">
+          ${recentAudit.length > 0 ? recentAudit.map(a => `
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-color);">
+              <div>
+                <div class="font-medium">${getReadableAction(a.action)}</div>
+                <div class="text-sm text-muted">${a.entityType.toUpperCase()} • ID: ${a.entityId || 'N/A'}</div>
+              </div>
+              <div style="text-align:right;">
+                <div class="text-sm" style="margin-bottom:0.25rem;">${getSourceBadge(a.source)}</div>
+                <div class="text-xs text-muted">${new Date(a.timestamp).toLocaleString([], {month:'short', day:'numeric', hour:'2-digit', minute:'2-digit'})}</div>
+              </div>
+            </div>
+          `).join('') : '<div class="text-muted text-center" style="padding: 1rem;">No activity recorded yet.</div>'}
         </div>
       </div>
     </div>
   `;
 }
+

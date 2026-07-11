@@ -7,6 +7,8 @@ import { addToast } from '../store.js';
 import { isDemoMode, getCurrentBusinessId } from '../services/mode-service.js';
 import { getSession, signOut } from '../services/auth-service.js';
 import { supabase } from '../services/supabase-client.js';
+import { getAll as getAllAuditLogs } from '../services/data/audit-service.js';
+import { getReadableAction, getSourceBadge } from '../utils/audit-helpers.js';
 
 export default async function renderSettings() {
   const isDemo = isDemoMode();
@@ -28,6 +30,16 @@ export default async function renderSettings() {
     }
   }
 
+  // Load audit logs
+  let allAudit = [];
+  try {
+    allAudit = await getAllAuditLogs() || [];
+  } catch (e) {
+    console.warn("Failed to load audit logs", e);
+  }
+  
+  const recentAudit = allAudit.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp)).slice(0, 30);
+
   // Bind actions globally
   window.handleLogout = async () => {
     try {
@@ -40,7 +52,7 @@ export default async function renderSettings() {
   };
 
   window.resetEtaleHubDatabase = async () => {
-    if (confirm('⚠️ DANGER: Are you sure you want to completely clear the EtaleHub local demo database?\n\nThis will NOT affect cloud data, but will wipe the local IndexedDB. The page will reload and re-seed the original demo data.')) {
+    if (confirm('⚠️ DANGER: Are you sure you want to completely clear the EtaleHub local demo database?nnThis will NOT affect cloud data, but will wipe the local IndexedDB. The page will reload and re-seed the original demo data.')) {
       const { deleteDatabase } = await import('../db/database.js');
       try {
         await deleteDatabase();
@@ -89,7 +101,7 @@ export default async function renderSettings() {
       </div>
     </div>
     
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1200px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; max-width: 1200px; margin-bottom: 2rem;">
       
       <!-- Left Column -->
       <div style="display:flex; flex-direction:column; gap: 2rem;">
@@ -243,5 +255,36 @@ export default async function renderSettings() {
         
       </div>
     </div>
+    
+    <!-- Full Width Audit Log -->
+    <div class="card" style="padding: 0; overflow:hidden; max-width: 1200px; margin-bottom: 3rem;">
+      <div style="padding: 1.5rem 1.5rem 1rem 1.5rem; border-bottom: 1px solid var(--border-color); background: var(--bg-primary);">
+        <h3 style="margin: 0;">Workspace Audit Trail</h3>
+        <p class="text-muted text-sm mt-1" style="margin-top:0.25rem;">Recent activity across all records (last 30 actions). Full historical log available via data export.</p>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date & Time</th>
+            <th>Source</th>
+            <th>Action</th>
+            <th>Record Type</th>
+            <th>Record ID</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${recentAudit.length > 0 ? recentAudit.map(a => `
+            <tr class="table-row">
+              <td class="text-muted">${new Date(a.timestamp).toLocaleString()}</td>
+              <td>${getSourceBadge(a.source)}</td>
+              <td class="font-medium">${getReadableAction(a.action)}</td>
+              <td>${(a.entityType || '').toUpperCase()}</td>
+              <td class="text-muted">#${a.entityId || 'N/A'}</td>
+            </tr>
+          `).join('') : '<tr><td colspan="5" class="text-center text-muted" style="padding: 2rem;">No audit logs found.</td></tr>'}
+        </tbody>
+      </table>
+    </div>
   `;
 }
+
